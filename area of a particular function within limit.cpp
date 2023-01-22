@@ -1,4 +1,86 @@
+
+#include <stdio.h>
+#include <math.h>
 #include<bits/stdc++.h>
+using namespace std;
+
+
+
+double f(double x,string equation)
+{
+    string delimiters = "+-*/=^ dx";
+    string token;
+    for (int i = 0; i < equation.size(); i++) {
+        if (delimiters.find(equation[i]) != std::string::npos)
+        {
+            cout << equation[i] << endl;
+        }
+        else if (isspace(equation[i]))
+        {
+            continue;
+        }
+        else {
+            token += equation[i];
+        }
+        if (i == equation.length() - 1 || delimiters.find(equation[i + 1]) != std::string::npos || isspace(equation[i+1]))
+        {
+            //cout << token << endl;
+            return token;
+            token.clear();
+        }
+    //return x*x + 1;
+}
+
+double area(string equation,double a, double b, int n)
+{
+    double h = (b-a)/n;
+    double sum = 0.5 * (f(a) + f(b));
+    for (int i = 1; i < n; i++) {
+        double x = a + i*h;
+        sum += f(x,equation);
+        printf("x: %f, f(x): %f, sum: %f\n",x,f(x),sum);
+    }
+    return sum * h;
+}
+
+int main()
+{
+    string equation;
+    printf("enter equation: ");
+    cin>>equation;
+    double a = 0;
+    double b = 2;
+    int n = 10;
+
+    printf("y = %f\n", area(equation,a, b, n));
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*#include<bits/stdc++.h>
 using namespace std;
 
 double equation(double x)
@@ -45,7 +127,7 @@ double with_limit(double lowerBound,int n,double dx)
 
         total+=area;
     }*/
-    for(int i=0;i<n;i++)
+   /* for(int i=0;i<n;i++)
     {
         double xi=lowerBound+i*dx;
         double value=equation(xi);
@@ -87,7 +169,7 @@ int main()
         cout<<values[i]<<"*x^"<<i<<"+";
         }
     }*/
-    cout<<"Enter the lower-bound: ";
+   /* cout<<"Enter the lower-bound: ";
     cin>>lowerBound;
     cout<<"Enter the upper-bound: ";
     cin>>upperBound;
@@ -98,3 +180,4 @@ int main()
 
     cout<<result<<endl;
 }
+*/
