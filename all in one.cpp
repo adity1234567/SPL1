@@ -5,7 +5,7 @@ vector<int>loop;
 
 void function_for(int i,int n)
 {
-    if(i>n) return;
+    if(i>=n) return;
 
     loop.push_back(i);
     function_for(i+1,n);
@@ -132,16 +132,156 @@ void simplification_numerator_denominator(string numerator,string denominator)
 
 }
 
+string constant_with_coefficient(string constant_list,int size_constant_list,string coefficient_list,int size_coefficient_list,bool need_to_divide)
+{
 
+
+   // cout<<size_constant_list<<endl;
+    int constant=0,coefficient=0;
+
+        constant+=convert_string_to_int(constant_list);
+       // constant*=10;
+
+    cout<<constant<<endl;
+
+
+    coefficient+=convert_string_to_int(coefficient_list);
+       //coefficient*=10;
+
+    cout<<coefficient<<endl;
+  //  int constant=string_to_int(constant_list);
+   // int coefficient=string_to_int(coefficient_list);
+    int result=0;
+    if(need_to_divide==false)
+    {
+        result=constant*coefficient;
+    }
+
+    string result_main=convert_int_to_string(result);
+    return result_main;
+}
+
+
+void power_and_constant(string power,string constant)
+{
+
+
+   set<char>power_check;
+   int store=0;
+   for(int i=0;i<power.size();i++)
+   {
+        power_check.insert(power[i]);
+        if(power[i]=='/')
+        {
+          store=i;
+          break;
+        }
+   }
+   string numerator_power="",denominator_power="";
+
+
+   int numerator_two_int=0,denominator_two_int=0;
+   if (power_check.find('/')!= power_check.end())
+   {
+       for(int i=0;i<store;i++)
+       {
+         numerator_power+=power[i];
+       }
+
+      numerator_two_int=convert_string_to_int(numerator_power);
+      numerator_two_int++;
+      for(int i=store+1;i<power.size();i++)
+      {
+          denominator_power+=power[i];
+      }
+      denominator_two_int=convert_string_to_int(denominator_power);
+   }
+   else
+   {
+       numerator_two_int++;
+   }
+
+
+   string numerator_constant="",denominator_constant="";
+   int numerator_constant_int=0,denominator_constant_int=0,store1=0;
+   set<char>constant_check;
+   for(int i=0;i<constant.size();i++)
+   {
+        constant_check.insert(constant[i]);
+        if(constant[i]=='/')
+        {
+          store1=i;
+          break;
+        }
+   }
+
+
+   cout<<"i:"<<store1<<endl;
+
+       if(constant_check.find('/')!= constant_check.end())
+       {
+            for(int i=0;i<store1;i++)
+       {
+         numerator_constant+=constant[i];
+       }
+      // cout<<numerator_constant<<endl;
+      numerator_constant_int=convert_string_to_int(numerator_constant);
+
+      for(int i=store1+1;i<constant.size();i++)
+      {
+          denominator_constant+=constant[i];
+      }
+      denominator_constant_int=convert_string_to_int(denominator_constant);
+       }
+   else
+   {
+       numerator_constant_int=convert_string_to_int(constant);
+       denominator_constant_int=1;
+   }
+
+
+   //cout<<numerator_two_int<<" "<<denominator_two_int<<endl;
+   //cout<<numerator_constant_int<<" "<<denominator_constant_int<<endl;
+
+   cout<<numerator_two_int*numerator_constant_int<<"/"<<denominator_two_int*denominator_constant_int<<endl;
+}
+
+void power_part(string s)
+{
+    int power_part=0;
+    int power=0;
+    string power_one="";
+    for(int i=0;i<s.size();i++)
+    {
+        if(s[i]=='x'&&s[i+1]=='^')
+        {
+           power_part=i+1;
+           power++;
+        }
+    }
+
+    if(power==1)
+    {
+      for(int i=power_part+1;i<s.size();i++)
+      {
+          power_one=power_one+s[i];
+      }
+    }
+    cout<<power_one<<endl;
+
+}
 parse(string given_expression)
 {
     string power="";
-    string constant="";
+    string constant="",constant_co="";
+    string coefficient="",coefficient_co="";
     int power_part=0;
     int constant_part=0;
     int first_bracket=0;
     int second_bracket=0;
     int count_bracket=0;
+    int size_of_constant=0;
+    int size_of_coefficient=0;
     vector<string>constant_list,coefficient_list;
     bool need_to_divide=false;
     int divide=0,can_divide=0;
@@ -268,20 +408,26 @@ parse(string given_expression)
         for(int i=1;i<j-1;i++)
         {
             constant+=given_expression[i];
-        }
-         constant_list.push_back(constant);
-         constant="";
-         for(int i=first_bracket+1;i<second_bracket;i++)
-         {
-             constant+=given_expression[i];
-         }
-         coefficient_list.push_back(constant);
 
+             size_of_constant++;
+        }
+        //constant_list.push_back(constant);
+         constant_co=constant;
+         //constant="";
+         for(int i=first_bracket+1;i<second_bracket-1;i++)
+         {
+             coefficient=given_expression[i];
+             size_of_coefficient++;
+         }
+       //  coefficient_list.push_back(constant);
+        coefficient_co=coefficient;
 
         }
     }
-      // cout<<"3rule"<<endl;
+    cout<<"3rule"<<endl;
 
+    cout<<constant_co<<" "<<coefficient_co<<endl;
+      cout<<constant_with_coefficient(constant_co,size_of_constant,coefficient_co,size_of_coefficient,need_to_divide);
 
        string numerator_one="",denominator_one="";
        string numerator_two="",denominator_two="";
