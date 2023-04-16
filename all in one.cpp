@@ -494,6 +494,7 @@ parse(string given_expression)
     int count_bracket=0;
     int size_of_constant=0;
     int size_of_coefficient=0;
+    int two_power=0;
     vector<string>constant_list,coefficient_list;
     bool need_to_divide=false;
     int divide=0,can_divide=0;
@@ -518,6 +519,8 @@ parse(string given_expression)
         {
            power_part=i;
            exist_power=true;
+           two_power++;///a^2+x^2 yes or not
+
           // break;
         }
 
@@ -789,6 +792,85 @@ parse(string given_expression)
             constant="1";
             calculate_trigonmetry_part(given_expression,coefficient,constant);
         }
+       }
+
+
+       if(two_power==2)
+       {
+           int below_part_start=0;
+           int plus_pos=0;
+           int minus_pos=0;
+           bool is_plus=false;
+           bool is_minus=false;
+           bool is_a_before_x=false;
+           bool is_x_before_a=false;
+
+           int first_square=0;
+           int pos_of_x=0;
+
+           vector<int>saving_square_pos;
+           function_for(0,given_expression.size());
+           for(auto i:loop)
+           {
+               if(given_expression[i]=='/')
+               {
+                   below_part_start=i;
+               }
+
+               if(given_expression[i]=='+')
+               {
+                   is_plus==true;
+                   plus_pos=i;
+               }
+
+               if(given_expression[i]=='-')
+               {
+                   is_minus==true;
+                   minus_pos=i;
+               }
+
+               if(given_expression[i]=='^')
+               {
+                   first_square=i;
+                   saving_square_pos.push_back(i);
+                  // break;
+               }
+
+               if(given_expression[i]=='x')
+               {
+                   pos_of_x=i;
+               }
+           }
+
+           cout<<"first square: "<<first_square<<endl;
+           cout<<"pos of x: "<< pos_of_x<<endl;
+
+           string constant="";
+           if(pos_of_x>minus_pos||pos_of_x>plus_pos)
+           {
+               for(int sign=below_part_start+2;sign<saving_square_pos[0];sign++)
+             {
+               if(given_expression[sign]>='1'&&given_expression[sign]>='9')
+               {
+                   constant+=given_expression[sign];
+               }
+             }
+
+             cout<<"constant1: "<<constant<<endl;
+           }
+           else
+           {
+               for(int sign=minus_pos+1;sign<power_part;sign++)
+             {
+               if(given_expression[sign]>='1'&&given_expression[sign]>='9')
+               {
+                   constant+=given_expression[sign];
+               }
+             }
+
+             cout<<"constant: "<<constant<<endl;
+           }
+
        }
 
 }
