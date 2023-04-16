@@ -9,7 +9,7 @@ void function_for(int i,int n)
     if(i>=n) return;
 
     loop.push_back(i);
-    cout<<i<<" ";
+    //cout<<i<<" ";
    // cout<<endl;
     function_for(i+1,n);
 
@@ -286,9 +286,12 @@ void calculate_power_part(string s,string constant,bool can_divide)
 
 }
 
-void coefficient(string input,string change_function)
+void trigonmetry_with_coefficient(string input,string change_function,string coefficient,string constant)
 {
-    int coefficient_pos_open=0;
+    //coefficient(input,change_function,coefficient);
+
+     string main_function="x";
+    /*int coefficient_pos_open=0;
      int coefficient_pos_close=0;
      string coefficient="";
     for(int i=0;i<input.size();i++)
@@ -307,10 +310,15 @@ void coefficient(string input,string change_function)
         coefficient+=input[i];
     }
 
-    cout<<coefficient<<endl;
+    cout<<coefficient<<endl;*/
+
+     //coefficient(input,change_function,coefficient);
+
+    cout<<"("<<constant<<"/"<<coefficient<<")"<<change_function+"("+coefficient+main_function+")"<<endl;
+
 }
 
-void trigonometry(string input)
+void calculate_trigonmetry_part(string input,string coefficient,string constant)
 {
     vector<char>check_function;
     int can_function=0;
@@ -347,8 +355,11 @@ void trigonometry(string input)
         else function_is+='x';
 
     }
+    //else if(check_function.size()==1)function_is="x";
     cout<<function_is<<endl;
     string change_function="";
+
+
     if(function_is=="sinx")
     {
         change_function+="cos";
@@ -360,16 +371,16 @@ void trigonometry(string input)
     else if(function_is=="secx")
     {
        //if(power==2)
-       {
+
            change_function+="tan";
-       }
+
     }
     else if(function_is=="cosecx")
     {
        // if(power==2)
-        {
+
             change_function+="cot";
-        }
+
     }
     else if(function_is=="cotxcosecx")
     {
@@ -386,7 +397,7 @@ void trigonometry(string input)
 
     cout<<change_function<<endl;
 
-    coefficient(input,change_function);
+    trigonmetry_with_coefficient(input,change_function,coefficient,constant);
 }
 
 
@@ -400,6 +411,7 @@ parse(string given_expression)
     bool exist_power=false;
     bool exist_constant=false;
     bool exist_coefficient=false;
+    bool is_trigonmetry=false;
     int constant_part=0;
     int first_bracket=0;
     int second_bracket=0;
@@ -449,6 +461,19 @@ parse(string given_expression)
             divide=i;
             can_divide++;
         }
+        ///5*sin(mx)
+        if(given_expression[i]=='*')
+        {
+        if(given_expression[i+1]>='a'||given_expression[i+1]<='z')
+        {
+            if(given_expression[i]!='x')
+            {
+               is_trigonmetry=true;
+            }
+        }
+        }
+
+
 
     }
 
@@ -495,7 +520,7 @@ parse(string given_expression)
           cout<<"constant part: "<<constant_part<<endl;
    if(first_bracket>constant_part&&count_bracket!=2)
     {
-        cout<<"5*(x)^5"<<endl;
+       // cout<<"5*(x)^5"<<endl;
     if(exist_constant==true)
     {
         function_for(0,constant_part);
@@ -510,7 +535,7 @@ parse(string given_expression)
         constant="1";
     }
     cout<<endl;
-     cout<<"aa " <<constant<<" constant"<<endl;
+     cout<<"constant: "<<constant<<endl;
      loop.clear();
    //ta cout<<constant;
 
@@ -528,7 +553,7 @@ parse(string given_expression)
        {
            constant+=given_expression[i];
        }
-        cout<<constant;
+        cout<<"constant: "<<constant<<endl;
          loop.clear();
    }
 
@@ -606,8 +631,37 @@ parse(string given_expression)
           calculate_power_part(given_expression,constant,need_to_divide);
        }
 
+       if(is_trigonmetry==true)
+       {
+           int position_coefficient=0;
+           int first_bracket=0;
+           string coefficient="";
+           function_for(0,given_expression.size());
+           for(auto i:loop)
+           {
+               if(given_expression[i]=='x')
+               {
+                  position_coefficient=i;
+               }
+               if(given_expression[i]=='(')
+               {
+                   first_bracket=i;
+               }
+           }
+
+           if(position_coefficient>0)
+           {
+               for(int i=first_bracket+1;i<position_coefficient;i++)
+               {
+                   coefficient+=given_expression[i];
+               }
+
+           }
+        calculate_trigonmetry_part(given_expression,coefficient,constant);
+       }
 
 }
+
 
 
 
@@ -619,5 +673,4 @@ int main()
     parse(s);
 
 }
-
 
