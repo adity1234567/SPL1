@@ -219,6 +219,8 @@ void power_and_constant(string power,string constant)
    }
 
 
+     string main_function="x";
+     string power1="^";
    cout<<"i:"<<store1<<endl;
 
        if(constant_check.find('/')!= constant_check.end())
@@ -248,9 +250,16 @@ void power_and_constant(string power,string constant)
 
    if(denominator_two_int*denominator_constant_int!=1)
    {
-       cout<<numerator_two_int*numerator_constant_int<<"/"<<denominator_two_int*denominator_constant_int<<endl;
+       cout<<"("<<numerator_two_int*numerator_constant_int<<"/"<<denominator_two_int*denominator_constant_int<<")*";
+
+       cout<<main_function<<power1<<"("<<numerator_two_int<<"/"<<denominator_two_int<<")"<<endl;
    }
-   else  cout<<numerator_two_int*numerator_constant_int<<endl;
+   else
+   {
+       cout<<"("<<numerator_two_int*numerator_constant_int<<")";
+
+       cout<<main_function<<power1<<numerator_two_int<<endl;
+   }
 }
 
 void calculate_power_part(string s,string constant,bool can_divide)
@@ -491,6 +500,7 @@ parse(string given_expression)
     string numerator,denominator;
    //  vector<int>loop;
 
+   int pos=0;
     function_for(0,given_expression.size());
 
 
@@ -530,10 +540,11 @@ parse(string given_expression)
         }
         ///5*sin(mx)
 
-        if(given_expression[i+1]>='a'||given_expression[i+1]<='z')
+        if(given_expression[i]>='a'&&given_expression[i]<='z')
         {
             if(given_expression[i]!='x')
             {
+                pos=i;
                is_trigonmetry=true;
             }
         }
@@ -542,6 +553,7 @@ parse(string given_expression)
 
 
     }
+    cout<<"is_trigonmetry: "<< is_trigonmetry<<" pos: "<<pos<<endl;
 
    // cout<<need_to_divide<<" "<<divide<<" "<<can_divide<<endl;
   //  cout<<count_bracket<<endl;
@@ -693,7 +705,7 @@ parse(string given_expression)
        }
 
        ///checking for x^n
-       if(exist_power==true)
+       if(exist_power==true&&is_trigonmetry==false)
        {
           calculate_power_part(given_expression,constant,need_to_divide);
        }
