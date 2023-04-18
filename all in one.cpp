@@ -583,6 +583,7 @@ parse(string given_expression)
     int count_bracket=0;
     int size_of_constant=0;
     int size_of_coefficient=0;
+    bool only_x=false;
     int two_power=0;
     vector<string>constant_list,coefficient_list;
     bool need_to_divide=false;
@@ -641,16 +642,62 @@ parse(string given_expression)
             }
         }
 
+        if(given_expression[i]=='x')
+        {
+            only_x=true;
+        }
+
 
 
 
     }
-    cout<<"is_trigonmetry: "<< is_trigonmetry<<" pos: "<<pos<<endl;
+
+   // cout<<"is_trigonmetry: "<< is_trigonmetry<<" pos: "<<pos<<endl;
 
    // cout<<need_to_divide<<" "<<divide<<" "<<can_divide<<endl;
-  //  cout<<count_bracket<<endl;
+//cout<<count_bracket<<endl;
    //  cout<<first_bracket<<" "<<second_bracket<<endl;
 // cout<<"p.p"<<" "<<power_part<<endl;
+
+
+///working for  terms--->>
+///----------------------------
+    int check = 0;
+    int count_term=1;
+    stack<char>signs_of_expression;
+
+    ///(1/(2^2+(3*x)^2))+(3*x^2)+(x)
+    while (check<=given_expression.size())
+        {
+        switch (given_expression[check])
+         {
+            case '+':
+                //cout << "got it +" << endl;
+                if (signs_of_expression.empty())
+                {
+                    count_term++;
+                }
+                break;
+            case '-':
+                //cout << "got it -" << endl;
+                if (signs_of_expression.empty())
+                {
+                    count_term++;
+                }
+                break;
+            case '(':
+                //cout << "got it (" << endl;
+                signs_of_expression.push('(');
+                break;
+            case ')':
+                //cout << "got it )" << endl;
+                signs_of_expression.pop();
+                break;
+        }
+        check++;
+    }
+
+    cout << "count_term: " << check << " " << count_sign << endl;
 
      int j,k=0;
           for(auto i:loop)
@@ -677,7 +724,7 @@ parse(string given_expression)
 
             loop.clear();
 
-        cout<<"s.b: "<<j<<" "<<k<<endl;
+       // cout<<"s.b: "<<j<<" "<<k<<endl;
 
         /**
           5*(x^5)
@@ -726,8 +773,7 @@ parse(string given_expression)
         cout<<"constant: "<<constant<<endl;
          loop.clear();
    }
-
-
+`
     else
     {
         /**(5/3)*(x^10)
