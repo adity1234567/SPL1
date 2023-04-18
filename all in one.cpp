@@ -113,7 +113,7 @@ string convert_int_to_string(long long int int_to_convert)
 }
 
 
-void simplification_numerator_denominator(string numerator,string denominator)
+string simplification_numerator_denominator(string numerator,string denominator)
 {
 
      int numerator_int=convert_string_to_int(numerator);
@@ -147,7 +147,7 @@ void simplification_numerator_denominator(string numerator,string denominator)
      string ans=numerator_string+"/"+denominator_string;
 
      cout<<"simplified string is: "<<ans<<endl;
-     //return ans;
+     return ans;
 
      ///jkhn minus lagbe tkhn minus kore dis....
 
@@ -497,19 +497,25 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant)
 
 
 
-void  formula_with_constant(string main_string,string change_function,string constant,int can_minus,int can_plus)
+void  formula_with_constant(string main_string,string change_function,string constant,int can_minus,int can_plus,string coefficient,bool is_coefficient)
 {
     int int_constant=convert_string_to_int(constant);
     int_constant=2*int_constant;
     string string_constant=convert_int_to_string(int_constant);
     string constant_is,plus1="+",minus1="-";
+    string main_function="x";
+    string a_by_b="";
 
     it_can_be(is_coefficient==true)
     {
-        int int_coefficient=convert_string_int(coefficient);
-        int_coefficient=square(int_coefficient);
+        int int_coefficient=convert_string_to_int(coefficient);
+        cout<<"before main coefficient: "<<int_coefficient<<" "<<int_constant<<endl;
+        a_by_b=simplification_numerator_denominator(constant,coefficient);
+        int_coefficient=int_coefficient*int_constant;
+        cout<<"after: "<<int_coefficient<<endl;
         string string_coefficient=convert_int_to_string(int_coefficient);
-        constant_is=simplification_numerator_denominator(string_coefficient,string_constant);
+
+        constant_is=simplification_numerator_denominator("1",string_coefficient);
     }
     it_can_be(is_coefficient==false)
     {
@@ -518,14 +524,15 @@ void  formula_with_constant(string main_string,string change_function,string con
 
     cout<<"constant is: "<<constant_is<<endl;
 
-    cout<<"("<<constant_is<<")"<<change_function<<"(("<<constant_is+plus1+main_function<<")/("<<constant_is+minus1+main_function")"<<endl;
+    cout<<"("<<constant_is<<")"<<change_function<<"(("<<a_by_b+plus1<<main_function<<")/("<<a_by_b+minus1+main_function<<")"<<endl;
 }
 
 
+/// calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient);
 
-
-void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,bool is_minus,string constant)
+void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,bool is_minus,string constant,string coefficient,bool is_coefficient)
 {
+    ///1/((25^2-(6*x)^2)
     string change_function="";
     string main_function="x";
     int can_plus=0,can_minus=0;
@@ -539,7 +546,7 @@ void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,
         }
         else if(is_minus==true)
         {
-          change_function+"ln";
+          change_function+="ln";
           can_minus++;
         }
 
@@ -548,7 +555,7 @@ void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,
     {
         if(is_minus==true)
         {
-          change_function+"ln";
+          change_function+="ln";
           can_minus++;
         }
     }
@@ -556,7 +563,8 @@ void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,
     cout<<"calculate formula-change function: "<<change_function<<endl;
 
     ///string main_string,string change_function,string constant,int can_minus,int can_plus
-    formula_with_constant(formula,change_function,constant,can_minus,can_plus);
+    ///formula_with_constant(string main_string,string change_function,string constant,int can_minus,int can_plus)
+    formula_with_constant(formula,change_function,constant,can_minus,can_plus,coefficient,is_coefficient);
 }
 
 parse(string given_expression)
@@ -934,6 +942,8 @@ parse(string given_expression)
 
            string constant="";
            string coefficient="";
+           int pos_of_constant=0;
+           bool is_coefficient=false;
            cout<<"below part start: "<<below_part_start<<endl;
            cout<<"pos_plus: "<<plus_pos<<endl;
            cout<<"pos_minus: "<<minus_pos<<endl;
@@ -949,6 +959,7 @@ parse(string given_expression)
 
                //function_for(index+2,pos_of_x_1);
                if(given_expression[pos_of_x_1]=='*'){
+                    is_coefficient=true;
                    int i=pos_of_x_1-1;
 
                    while(given_expression[i]!='(')
@@ -968,11 +979,12 @@ parse(string given_expression)
          if(plus_pos!=0||minus_pos!=0){
            if((pos_of_x>minus_pos)&&minus_pos!=0||(pos_of_x>plus_pos)&&plus_pos!=0)
            {
-               for(int sign=below_part_start+2;sign<saving_square_pos[0];sign++)
+               for(int sign=below_part_start+3;sign<saving_square_pos[0];sign++)
              {
                    constant+=given_expression[sign];
 
              }
+             pos_of_constant=below_part_start+2;
 
              cout<<"constant1: "<<constant<<endl;
            }
@@ -984,12 +996,14 @@ parse(string given_expression)
                    constant+=given_expression[sign];
 
              }
+               pos_of_constant=minus_pos+1;
 
              cout<<"constant: "<<constant<<endl;
            }
          }
 
-         cout<<
+         calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient);
+
        }
 
 }
