@@ -55,11 +55,28 @@ long long int convert_string_to_int(string string_to_convert)
     return converted_int;
 }
 
-
-string reverse_sttring(string s)
+int square(int num)
 {
-
+    return num*num;
 }
+
+#define it_can_be if
+
+string reverse_string(string s)
+{
+    stack<char> st;
+
+    string p="";
+    for (char x : s) st.push(x);
+    while (!st.empty())
+    {
+        p+=st.top();
+        st.pop();
+    }
+    return p;
+}
+
+
 string convert_int_to_string(long long int int_to_convert)
 {
     string new_string,temp_string;
@@ -127,8 +144,10 @@ void simplification_numerator_denominator(string numerator,string denominator)
      string numerator_string=convert_int_to_string(numerator_final);
      string denominator_string=convert_int_to_string(denominator_final);
 
+     string ans=numerator_string+"/"+denominator_string;
 
-    cout<<numerator_string+"/"+denominator_string<<endl;
+     cout<<"simplified string is: "<<ans<<endl;
+     //return ans;
 
      ///jkhn minus lagbe tkhn minus kore dis....
 
@@ -478,6 +497,68 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant)
 
 
 
+void  formula_with_constant(string main_string,string change_function,string constant,int can_minus,int can_plus)
+{
+    int int_constant=convert_string_to_int(constant);
+    int_constant=2*int_constant;
+    string string_constant=convert_int_to_string(int_constant);
+    string constant_is,plus1="+",minus1="-";
+
+    it_can_be(is_coefficient==true)
+    {
+        int int_coefficient=convert_string_int(coefficient);
+        int_coefficient=square(int_coefficient);
+        string string_coefficient=convert_int_to_string(int_coefficient);
+        constant_is=simplification_numerator_denominator(string_coefficient,string_constant);
+    }
+    it_can_be(is_coefficient==false)
+    {
+        constant_is=simplification_numerator_denominator("1",string_constant);
+    }
+
+    cout<<"constant is: "<<constant_is<<endl;
+
+    cout<<"("<<constant_is<<")"<<change_function<<"(("<<constant_is+plus1+main_function<<")/("<<constant_is+minus1+main_function")"<<endl;
+}
+
+
+
+
+void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,bool is_minus,string constant)
+{
+    string change_function="";
+    string main_function="x";
+    int can_plus=0,can_minus=0;
+
+    if(pos_constant<pos_of_x)
+    {
+        if(is_plus==true)
+        {
+            change_function+="tan^-1";
+            can_plus++;
+        }
+        else if(is_minus==true)
+        {
+          change_function+"ln";
+          can_minus++;
+        }
+
+    }
+    else
+    {
+        if(is_minus==true)
+        {
+          change_function+"ln";
+          can_minus++;
+        }
+    }
+
+    cout<<"calculate formula-change function: "<<change_function<<endl;
+
+    ///string main_string,string change_function,string constant,int can_minus,int can_plus
+    formula_with_constant(formula,change_function,constant,can_minus,can_plus);
+}
+
 parse(string given_expression)
 {
     string power="";
@@ -739,6 +820,7 @@ parse(string given_expression)
                }
            }
            ///sec(x)tan(x)
+           loop.clear();
         cout<<"position of coefficient and first bracket: "<<position_coefficient<<" "<<first_bracket<<endl;
 
            if(position_coefficient>0)
@@ -794,6 +876,7 @@ parse(string given_expression)
         }
        }
 
+       cout<<"new"<<endl;
 
        if(two_power==2)
        {
@@ -806,27 +889,30 @@ parse(string given_expression)
            bool is_x_before_a=false;
 
            int first_square=0;
-           int pos_of_x=0;
+           int pos_of_x=0,pos_of_x_1=0;
 
+
+           loop.clear();
            vector<int>saving_square_pos;
-           function_for(0,given_expression.size());
-           for(auto i:loop)
+           //function_for(0,given_expression.size());
+           for(int i=0;i<given_expression.size();i++)
            {
-               if(given_expression[i]=='/')
-               {
-                   below_part_start=i;
-               }
-
-               if(given_expression[i]=='+')
-               {
-                   is_plus==true;
-                   plus_pos=i;
-               }
 
                if(given_expression[i]=='-')
                {
-                   is_minus==true;
+                   is_minus=true;
+                    cout<<"pagol minus ase"<<endl;
                    minus_pos=i;
+               }
+                if(given_expression[i]=='+')
+               {
+                   is_plus=true;
+                  // cout<<"pagol plus ase"<<endl;
+                   plus_pos=i;
+               }
+                if(given_expression[i]=='/')
+               {
+                   below_part_start=i;
                }
 
                if(given_expression[i]=='^')
@@ -839,6 +925,7 @@ parse(string given_expression)
                if(given_expression[i]=='x')
                {
                    pos_of_x=i;
+                   pos_of_x_1=i-1;
                }
            }
 
@@ -846,31 +933,63 @@ parse(string given_expression)
            cout<<"pos of x: "<< pos_of_x<<endl;
 
            string constant="";
-           if(pos_of_x>minus_pos||pos_of_x>plus_pos)
+           string coefficient="";
+           cout<<"below part start: "<<below_part_start<<endl;
+           cout<<"pos_plus: "<<plus_pos<<endl;
+           cout<<"pos_minus: "<<minus_pos<<endl;
+           loop.clear();
+           it_can_be(is_plus==true||is_minus==true)
+           {
+               int index=0;
+               if(is_plus==true)
+               {
+                   index=plus_pos;
+               }
+               else index=minus_pos;
+
+               //function_for(index+2,pos_of_x_1);
+               if(given_expression[pos_of_x_1]=='*'){
+                   int i=pos_of_x_1-1;
+
+                   while(given_expression[i]!='(')
+                    {
+                      coefficient+=given_expression[i];
+                      i--;
+                    }
+
+               }
+               coefficient=reverse_string(coefficient);
+
+               cout<<"coefficient a_X: "<<coefficient<<endl;
+           }
+         //  cout<<"saving_square_pos[0]: "<<saving_square_pos[0]<<endl;
+
+
+         if(plus_pos!=0||minus_pos!=0){
+           if((pos_of_x>minus_pos)&&minus_pos!=0||(pos_of_x>plus_pos)&&plus_pos!=0)
            {
                for(int sign=below_part_start+2;sign<saving_square_pos[0];sign++)
              {
-               if(given_expression[sign]>='1'&&given_expression[sign]>='9')
-               {
                    constant+=given_expression[sign];
-               }
+
              }
 
              cout<<"constant1: "<<constant<<endl;
            }
-           else
+           else ///1/((2*x)^2-2^2)
            {
                for(int sign=minus_pos+1;sign<power_part;sign++)
              {
-               if(given_expression[sign]>='1'&&given_expression[sign]>='9')
-               {
+
                    constant+=given_expression[sign];
-               }
+
              }
 
              cout<<"constant: "<<constant<<endl;
            }
+         }
 
+         cout<<
        }
 
 }
