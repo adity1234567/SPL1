@@ -664,9 +664,16 @@ parse(string given_expression)
 ///----------------------------
     int check = 0;
     int count_term=1;
+    int count_sign=0;
+    int arr_terms_pos[100];
+    memset(arr_terms_pos,0,sizeof(arr_terms_pos));
+
     stack<char>signs_of_expression;
+    vector<int>terms_pos;
 
     ///(1/(2^2+(3*x)^2))+(3*x^2)+(x)
+
+    int another_check=0;
     while (check<=given_expression.size())
         {
         switch (given_expression[check])
@@ -675,13 +682,21 @@ parse(string given_expression)
                 //cout << "got it +" << endl;
                 if (signs_of_expression.empty())
                 {
+                    terms_pos.push_back(check);
+                    arr_terms_pos[another_check]=check;
+
                     count_term++;
+                    another_check++;
                 }
                 break;
             case '-':
                 //cout << "got it -" << endl;
                 if (signs_of_expression.empty())
                 {
+                    terms_pos.push_back(check);
+                    arr_terms_pos[another_check]=check;
+
+                    another_check++;
                     count_term++;
                 }
                 break;
@@ -697,7 +712,49 @@ parse(string given_expression)
         check++;
     }
 
-    cout << "count_term: " << check << " " << count_sign << endl;
+    cout << "count_term: " << check << " " << count_term << endl;
+
+
+///19/4/2023
+///korbo j terms_pos pojhonto shb gula elements insert korbo
+
+     string term1="";
+
+     for(int i=0;i<terms_pos[0];i++)
+     {
+         term1+=given_expression[i];
+     }
+     cout<<term1<<endl;
+
+     for(int i=0;i<count_term-1;i++)
+     {
+        cout<<arr_terms_pos[i]<<endl;
+     }
+    count_term--;
+
+    int pos_checker=0;
+
+    vector<string>terms_string;
+    string add_terms="";
+    cout<<"now term is: "<<count_term<<endl;
+      while(count_term!=0){
+        for(int i=arr_terms_pos[pos_checker]+1;i<arr_terms_pos[pos_checker+1];i++)
+        {
+           add_terms+=given_expression[i];
+
+           cout<<add_terms<<endl;
+        }
+         pos_checker++;
+
+         cout<<add_terms<<endl;
+        terms_string.push_back(add_terms);
+        count_term--;
+        add_terms="";
+    }
+    for(int i=0;i<terms_string.size();i++)
+    {
+        cout<<terms_string[i]<<endl;
+    }
 
      int j,k=0;
           for(auto i:loop)
@@ -773,7 +830,7 @@ parse(string given_expression)
         cout<<"constant: "<<constant<<endl;
          loop.clear();
    }
-`
+
     else
     {
         /**(5/3)*(x^10)
