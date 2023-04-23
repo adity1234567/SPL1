@@ -718,27 +718,30 @@ parse(string given_expression)
 ///19/4/2023
 ///korbo j terms_pos pojhonto shb gula elements insert korbo
 
-     string term1="";
+     string add_terms="";
+    vector<string>terms_string(count_term);
+
 
      for(int i=0;i<terms_pos[0];i++)
      {
-         term1+=given_expression[i];
+         add_terms+=given_expression[i];
      }
-     cout<<term1<<endl;
+     //cout<<term1<<endl;
+     terms_string.push_back(add_terms);
 
      for(int i=0;i<count_term-1;i++)
      {
-        cout<<arr_terms_pos[i]<<endl;
+        cout<<terms_pos[i]<<endl;
      }
     count_term--;
 
     int pos_checker=0;
 
-    vector<string>terms_string;
-    string add_terms="";
+
+    add_terms="";
     cout<<"now term is: "<<count_term<<endl;
-      while(count_term!=0){
-        for(int i=arr_terms_pos[pos_checker]+1;i<arr_terms_pos[pos_checker+1];i++)
+      while(count_term>1){
+        for(int i=terms_pos[pos_checker]+1;i<terms_pos[pos_checker+1];i++)
         {
            add_terms+=given_expression[i];
 
@@ -746,11 +749,20 @@ parse(string given_expression)
         }
          pos_checker++;
 
-         cout<<add_terms<<endl;
+         cout<<add_terms<<" "<<pos_checker<<endl;
         terms_string.push_back(add_terms);
         count_term--;
         add_terms="";
     }
+
+    add_terms="";
+    int last_pos=terms_pos.size()-1;
+    for(int i=terms_pos[last_pos]+1;i<check-1;i++)
+    {
+        add_terms+=given_expression[i];
+    }
+    terms_string.push_back(add_terms);
+
     for(int i=0;i<terms_string.size();i++)
     {
         cout<<terms_string[i]<<endl;
