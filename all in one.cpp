@@ -567,6 +567,45 @@ void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,
     formula_with_constant(formula,change_function,constant,can_minus,can_plus,coefficient,is_coefficient);
 }
 
+int count_multi=0,count_power=0,count_divide=0,x=0;
+bool trigonmetry=false,power=false,divide=false;
+int terms_checking(const string& given_expression, int i=0) {
+
+
+    if (i < given_expression.size()) {
+        switch(given_expression[i])
+    {
+        case '*':
+           count_multi++;
+            break;
+        case '^':
+            count_power++;
+            power=true;
+            ///a^2+x^2 yes or not
+            break;
+        case '/':
+            divide=true;
+            count_divide++;
+            break;
+        case 'x':
+            x++;
+            break;
+        default:
+            if(given_expression[i]>='a'&&given_expression[i]<='z')
+            {
+                if(given_expression[i]!='x')
+                {
+                    trigonmetry=true;
+                }
+            }
+            break;
+    }
+}
+
+        terms_checking(given_expression, i+1);
+
+}
+
 parse(string given_expression)
 {
     string power="";
@@ -601,6 +640,7 @@ parse(string given_expression)
 
         if(given_expression[i]=='*')
         {
+            count_multi++;
             constant_part=i;
             exist_constant=true;
            // break;
@@ -644,6 +684,7 @@ parse(string given_expression)
 
         if(given_expression[i]=='x')
         {
+            x++;
             only_x=true;
         }
 
@@ -659,6 +700,20 @@ parse(string given_expression)
    //  cout<<first_bracket<<" "<<second_bracket<<endl;
 // cout<<"p.p"<<" "<<power_part<<endl;
 
+///24/4/2023-->work on every terms count
+    int system=0;
+    if(two_power==2)
+    {
+        system=3;
+    }
+    else if(x==1)
+    {
+        system=1;
+    }
+    else if(is_trigonmetry==true)
+    {
+        system=2;
+    }
 
 ///working for  terms--->>
 ///----------------------------
@@ -767,6 +822,8 @@ parse(string given_expression)
     {
         cout<<terms_string[i]<<endl;
     }
+
+
 
      int j,k=0;
           for(auto i:loop)
