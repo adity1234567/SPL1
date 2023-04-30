@@ -309,6 +309,7 @@ void calculate_power_part(string s,string constant,bool can_divide)
     }
 
     cout<<"power: "<<power_one<<" constant: "<<constant<<endl;
+   // power_one++;
    if(can_divide==false)power_and_constant(power_one+"/1",constant+"/1");
     else power_and_constant(power_one+"/1",constant);
 
@@ -606,6 +607,7 @@ int terms_checking(const string& given_expression, int i=0) {
 
 }
 
+
 parse(string given_expression)
 {
     string power="";
@@ -627,71 +629,11 @@ parse(string given_expression)
     vector<string>constant_list,coefficient_list;
     bool need_to_divide=false;
     int divide=0,can_divide=0;
-    string numerator,denominator;
-   //  vector<int>loop;
+    string numerator,denominator,main_term="x";
+    vector<int>secondBrackets,firstBrackets;
 
    int pos=0;
-    function_for(0,given_expression.size());
 
-
-    for(auto i:loop)
-    {
-      //  cout<<i<<" ";
-
-        if(given_expression[i]=='*')
-        {
-            count_multi++;
-            constant_part=i;
-            exist_constant=true;
-           // break;
-        }
-        if(given_expression[i]=='^')
-        {
-           power_part=i;
-           exist_power=true;
-           two_power++;///a^2+x^2 yes or not
-
-          // break;
-        }
-
-        if(given_expression[i]=='(')
-        {
-            first_bracket=i;
-            count_bracket++;
-          //  break;
-        }
-        if(given_expression[i]==')')
-        {
-            second_bracket=i;
-           // break;
-        }
-        if(given_expression[i]=='/')
-        {
-            need_to_divide=true;
-            divide=i;
-            can_divide++;
-        }
-        ///5*sin(mx)
-
-        if(given_expression[i]>='a'&&given_expression[i]<='z')
-        {
-            if(given_expression[i]!='x')
-            {
-                pos=i;
-               is_trigonmetry=true;
-            }
-        }
-
-        if(given_expression[i]=='x')
-        {
-            x++;
-            only_x=true;
-        }
-
-
-
-
-    }
 
    // cout<<"is_trigonmetry: "<< is_trigonmetry<<" pos: "<<pos<<endl;
 
@@ -700,20 +642,6 @@ parse(string given_expression)
    //  cout<<first_bracket<<" "<<second_bracket<<endl;
 // cout<<"p.p"<<" "<<power_part<<endl;
 
-///24/4/2023-->work on every terms count
-    int system=0;
-    if(two_power==2)
-    {
-        system=3;
-    }
-    else if(x==1)
-    {
-        system=1;
-    }
-    else if(is_trigonmetry==true)
-    {
-        system=2;
-    }
 
 ///working for  terms--->>
 ///----------------------------
@@ -773,7 +701,7 @@ parse(string given_expression)
 ///19/4/2023
 ///korbo j terms_pos pojhonto shb gula elements insert korbo
 
-     string add_terms="";
+    string add_terms="";
     vector<string>terms_string(count_term);
 
 
@@ -821,7 +749,87 @@ parse(string given_expression)
     for(int i=0;i<terms_string.size();i++)
     {
         cout<<terms_string[i]<<endl;
+
+    loop.clear();
+    function_for(0,given_expression.size());
+
+
+    for(auto i:loop)
+    {
+      //  cout<<i<<" ";
+
+        if(given_expression[i]=='*')
+        {
+            count_multi++;
+            constant_part=i;
+            exist_constant=true;
+           // break;
+        }
+        if(given_expression[i]=='^')
+        {
+           power_part=i;
+           exist_power=true;
+           two_power++;///a^2+x^2 yes or not
+
+          // break;
+        }
+
+        if(given_expression[i]=='(')
+        {
+            first_bracket=i;
+            count_bracket++;
+            firstBrackets.push_back(i);
+          //  break;
+        }
+        if(given_expression[i]==')')
+        {
+            second_bracket=i;
+            secondBrackets.push_back(i);
+           // break;
+        }
+        if(given_expression[i]=='/')
+        {
+            need_to_divide=true;
+            divide=i;
+            can_divide++;
+        }
+        ///5*sin(mx)
+
+        if(given_expression[i]>='a'&&given_expression[i]<='z')
+        {
+            if(given_expression[i]!='x')
+            {
+                pos=i;
+               is_trigonmetry=true;
+            }
+        }
+
+        if(given_expression[i]=='x')
+        {
+            x++;
+            only_x=true;
+        }
+
+
+
+
     }
+
+    ///24/4/2023-->work on every terms count
+    int system=0;
+    if(two_power==2)
+    {
+        system=3;
+    }
+    else if(x==1)
+    {
+        system=1;
+    }
+    else if(is_trigonmetry==true)
+    {
+        system=2;
+    }
+
 
 
 
@@ -861,12 +869,14 @@ parse(string given_expression)
           **/
 
           cout<<"constant part: "<<constant_part<<endl;
-   if(first_bracket>constant_part&&count_bracket!=2)
-    {
-       // cout<<"5*(x)^5"<<endl;
+
+   ///for every constant
+   ///----------------------------
+
     if(exist_constant==true)
     {
-        function_for(0,constant_part);
+        loop.clear();
+        function_for(1,constant_part);
         for(auto i:loop)
         {
             constant+=given_expression[i];
@@ -877,57 +887,50 @@ parse(string given_expression)
     {
         constant="1";
     }
-    cout<<endl;
-     cout<<"constant: "<<constant<<endl;
-     loop.clear();
+   // cout<<endl;
+
+    // loop.clear();
    //ta cout<<constant;
 
+
+
+   int openBracketPlace=0,closeBracketPlace=0;
+   for(int i=0;i<=firstBrackets.size();i++)
+   {
+       if(i==1) openBracketPlace=i;
+   }
+    for(int i=0;i<=secondBrackets.size();i++)
+   {
+       if(i==0) closeBracketPlace=i;
    }
    /**
      (3x)
      **/
-   else if(first_bracket<constant_part&&count_bracket!=2)
+   //else if(first_bracket<constant_part&&count_bracket!=2)
+    if(need_to_divide==true)
    {
-      // cout<<"(5*x^5)"<<endl;
-
-      function_for(first_bracket+1,second_bracket);
-
-      for(auto i:loop)
+     //((3/2)*x^2)--> check the firstBracket=2
+      for(int i=openBracketPlace+1;i<closeBracketPlace;i++);
        {
-           constant+=given_expression[i];
+          constant+=given_expression[i];
        }
-        cout<<"constant: "<<constant<<endl;
-         loop.clear();
+
    }
 
-    else
-    {
-        /**(5/3)*(x^10)
-        tan(x)sec(x)
+     cout<<"constant: "<<constant<<endl;
 
-        **/
-        if(count_bracket==2&&is_trigonmetry==false)
-        {
-
-        for(int i=1;i<j-1;i++)
-        {
-            constant+=given_expression[i];
-
-             size_of_constant++;
-        }
-        //constant_list.push_back(constant);
-         constant_co=constant;
-         //constant="";
-         for(int i=first_bracket+1;i<second_bracket-1;i++)
+     ///power
+     string power="";
+     if(exist_power==true&&count_power==1)
+     {
+         for(int i=power_part+1;i<second_bracket;i++)
          {
-             coefficient=given_expression[i];
-             size_of_coefficient++;
+             power=power+given_expression[i];
          }
-       //  coefficient_list.push_back(constant);
-        coefficient_co=coefficient;
+     }
+   cout<<"power: "<<power<<endl;
 
-        }
-    }
+
    // cout<<"3rule"<<endl;
 
    // cout<<constant_co<<" "<<coefficient_co<<endl;
@@ -975,11 +978,19 @@ parse(string given_expression)
        }
 
 
+       if(system==1)
+       {
+
+
+         // deal_with_only_x(power,main_term,constant);
+          calculate_power_part(given_expression,constant,need_to_divide);
+
+       }
        /**
            5*sin(4x)
            sec(x)tan(x)
            **/
-       if(is_trigonmetry==true)
+       if(system==2)
        {
            int position_coefficient=0;
            int first_bracket=0;
@@ -1058,7 +1069,7 @@ parse(string given_expression)
 
        cout<<"new"<<endl;
 
-       if(two_power==2)
+       if(system==3)
        {
            int below_part_start=0;
            int plus_pos=0;
@@ -1177,6 +1188,7 @@ parse(string given_expression)
          calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient);
 
        }
+    }
 
 }
 
@@ -1191,4 +1203,5 @@ int main()
     parse(s);
 
 }
+
 
