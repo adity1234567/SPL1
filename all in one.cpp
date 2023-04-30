@@ -610,29 +610,6 @@ int terms_checking(const string& given_expression, int i=0) {
 
 parse(string given_expression)
 {
-    string power="";
-    string constant="",constant_co="";
-    string coefficient="",coefficient_co="";
-    int power_part=0;
-    bool exist_power=false;
-    bool exist_constant=false;
-    bool exist_coefficient=false;
-    bool is_trigonmetry=false;
-    int constant_part=0;
-    int first_bracket=0;
-    int second_bracket=0;
-    int count_bracket=0;
-    int size_of_constant=0;
-    int size_of_coefficient=0;
-    bool only_x=false;
-    int two_power=0;
-    vector<string>constant_list,coefficient_list;
-    bool need_to_divide=false;
-    int divide=0,can_divide=0;
-    string numerator,denominator,main_term="x";
-    vector<int>secondBrackets,firstBrackets;
-
-   int pos=0;
 
 
    // cout<<"is_trigonmetry: "<< is_trigonmetry<<" pos: "<<pos<<endl;
@@ -702,10 +679,10 @@ parse(string given_expression)
 ///korbo j terms_pos pojhonto shb gula elements insert korbo
 
     string add_terms="";
-    vector<string>terms_string(count_term);
+    vector<string>terms_string;
 
 
-     for(int i=0;i<terms_pos[0];i++)
+     for(int i=0;i<=terms_pos[0];i++)
      {
          add_terms+=given_expression[i];
      }
@@ -746,9 +723,42 @@ parse(string given_expression)
     }
     terms_string.push_back(add_terms);
 
-    for(int i=0;i<terms_string.size();i++)
+    cout<<"terms_string.size()"<<terms_string.size()<<endl;
+     for(int i=0;i<terms_string.size();i++)
     {
-        cout<<terms_string[i]<<endl;
+        cout<<"before string is: "<<terms_string[i]<<endl;
+    }
+    cout<<endl;
+    for(int i=2;i<terms_string.size();i++)
+    {
+        cout<<"string is: "<<terms_string[i]<<endl;
+
+        string given_expression="";
+        given_expression=terms_string[i];
+
+        string power="";
+    string constant="",constant_co="";
+    string coefficient="",coefficient_co="";
+    int power_part=0;
+    bool exist_power=false;
+    bool exist_constant=false;
+    bool exist_coefficient=false;
+    bool is_trigonmetry=false;
+    int constant_part=0;
+    int first_bracket=0;
+    int second_bracket=0;
+    int count_bracket=0;
+    int size_of_constant=0;
+    int size_of_coefficient=0;
+    bool only_x=false;
+    int two_power=0;
+    vector<string>constant_list,coefficient_list;
+    bool need_to_divide=false;
+    int divide=0,can_divide=0;
+    string numerator,denominator,main_term="x";
+    vector<int>secondBrackets,firstBrackets;
+
+   int pos=0;
 
     loop.clear();
     function_for(0,given_expression.size());
@@ -920,7 +930,7 @@ parse(string given_expression)
      cout<<"constant: "<<constant<<endl;
 
      ///power
-     string power="";
+     power="";
      if(exist_power==true&&count_power==1)
      {
          for(int i=power_part+1;i<second_bracket;i++)
