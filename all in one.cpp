@@ -682,7 +682,7 @@ parse(string given_expression)
     vector<string>terms_string;
 
 
-     for(int i=0;i<=terms_pos[0];i++)
+     for(int i=0;i<terms_pos[0];i++)
      {
          add_terms+=given_expression[i];
      }
@@ -729,7 +729,7 @@ parse(string given_expression)
         cout<<"before string is: "<<terms_string[i]<<endl;
     }
     cout<<endl;
-    for(int i=2;i<terms_string.size();i++)
+    for(int i=0;i<terms_string.size();i++)
     {
         cout<<"string is: "<<terms_string[i]<<endl;
 
@@ -757,7 +757,7 @@ parse(string given_expression)
     int divide=0,can_divide=0;
     string numerator,denominator,main_term="x";
     vector<int>secondBrackets,firstBrackets;
-
+    vector<int> pos_of_x;
    int pos=0;
 
     loop.clear();
@@ -788,13 +788,13 @@ parse(string given_expression)
         {
             first_bracket=i;
             count_bracket++;
-            firstBrackets.push_back(i);
+            firstBrackets.push_back(first_bracket);
           //  break;
         }
         if(given_expression[i]==')')
         {
             second_bracket=i;
-            secondBrackets.push_back(i);
+            secondBrackets.push_back(second_bracket);
            // break;
         }
         if(given_expression[i]=='/')
@@ -817,6 +817,7 @@ parse(string given_expression)
         if(given_expression[i]=='x')
         {
             x++;
+            pos_of_x.push_back(i);
             only_x=true;
         }
 
@@ -878,11 +879,12 @@ parse(string given_expression)
 
           **/
 
-          cout<<"constant part: "<<constant_part<<endl;
+         // cout<<"constant part: "<<constant_part<<endl;
 
    ///for every constant
    ///----------------------------
 
+   if(two_power!=2){
     if(exist_constant==true)
     {
         loop.clear();
@@ -897,22 +899,24 @@ parse(string given_expression)
     {
         constant="1";
     }
+
    // cout<<endl;
 
     // loop.clear();
-   //ta cout<<constant;
+    cout<<"constant: "<<constant<<endl;
 
 
 
    int openBracketPlace=0,closeBracketPlace=0;
    for(int i=0;i<=firstBrackets.size();i++)
    {
-       if(i==1) openBracketPlace=i;
+       if(i==1) openBracketPlace=firstBrackets[i];
    }
     for(int i=0;i<=secondBrackets.size();i++)
    {
-       if(i==0) closeBracketPlace=i;
+       if(i==0) closeBracketPlace=secondBrackets[i];
    }
+   cout<<"openBracketPlace and close: "<<openBracketPlace<<" "<<closeBracketPlace<<endl;
    /**
      (3x)
      **/
@@ -925,9 +929,12 @@ parse(string given_expression)
           constant+=given_expression[i];
        }
 
-   }
+
 
      cout<<"constant: "<<constant<<endl;
+   }
+   }
+
 
      ///power
      power="";
@@ -997,11 +1004,13 @@ parse(string given_expression)
 
        }
        /**
-           5*sin(4x)
+           (5*sin(4x))
+     ---------------------
            sec(x)tan(x)
            **/
        if(system==2)
        {
+        //(1/(a2+x2)) dx = (1/a) tan-1(x/a)
            int position_coefficient=0;
            int first_bracket=0;
            string coefficient="";
@@ -1009,11 +1018,13 @@ parse(string given_expression)
            bool exist_constant=false;
             int first_char=0;
            function_for(0,given_expression.size());
+           vector<int>waiting_x;
            for(auto i:loop)
            {
                if(given_expression[i]=='x')
                {
                   position_coefficient=i;
+                  waiting_x.push_back(position_coefficient);
                }
                if(given_expression[i]=='(')
                {
@@ -1022,18 +1033,33 @@ parse(string given_expression)
            }
            ///sec(x)tan(x)
            loop.clear();
-        cout<<"position of coefficient and first bracket: "<<position_coefficient<<" "<<first_bracket<<endl;
+      //  cout<<"position of coefficient and first bracket: "<<position_coefficient<<" "<<first_bracket<<endl;
 
-           if(position_coefficient>0)
-           {
-               for(int i=first_bracket+1;i<position_coefficient;i++)
+      int main_str_size=0;
+         for(int i=0;i<waiting_x.size()/2;i++){
+
+               int k=waiting_x[i]-2;
+               while(given_expression[k]!='(')
                {
-                   coefficient+=given_expression[i];
+                    coefficient+=given_expression[k];
+                    k--;
                }
+               i++;
 
-           }
+        }
 
-           if(count_bracket==2)
+      cout<<"co-efficient: "<< coefficient<<endl;
+
+    /**  for(int i=plus-3;;i--)
+         {
+             while(given_expression[i]!='(')
+             {
+                 constant+=given_expression[i];
+             }
+         }
+         cout<<"new constant: "<<constant<<endl;**/
+
+           if(x==2)
            {
                for(int i=0;i<first_bracket;i++)
                {
@@ -1044,7 +1070,7 @@ parse(string given_expression)
                        {
                           first_char=i;
                           exist_constant=true;
-                          //break;
+                          break;
                        }
                    }
 
@@ -1052,12 +1078,12 @@ parse(string given_expression)
                            {
                             first_char=0;
                            // break;
-                          }
-                       }
+                           }
+                }
 
 
 
-                   for(int i=0;i<first_char;i++)
+                   for(int i=1;i<first_char;i++)
                    {
                        constant+=given_expression[i];
                    }
