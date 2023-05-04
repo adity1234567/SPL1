@@ -505,13 +505,14 @@ void  formula_with_constant(string main_string,string change_function,string con
     string string_constant=convert_int_to_string(int_constant);
     string constant_is,plus1="+",minus1="-";
     string main_function="x";
-    string a_by_b="";
+    string a_by_b="",b_by_a="";
 
     it_can_be(is_coefficient==true)
     {
         int int_coefficient=convert_string_to_int(coefficient);
         cout<<"before main coefficient: "<<int_coefficient<<" "<<int_constant<<endl;
         a_by_b=simplification_numerator_denominator(constant,coefficient);
+        b_by_a=simplification_numerator_denominator(coefficient,constant);
         int_coefficient=int_coefficient*int_constant;
         cout<<"after: "<<int_coefficient<<endl;
         string string_coefficient=convert_int_to_string(int_coefficient);
@@ -525,7 +526,17 @@ void  formula_with_constant(string main_string,string change_function,string con
 
     cout<<"constant is: "<<constant_is<<endl;
 
-    cout<<"("<<constant_is<<")"<<change_function<<"(("<<a_by_b+plus1<<main_function<<")/("<<a_by_b+minus1+main_function<<")"<<endl;
+    if(can_plus>0)
+    {
+       cout<<"("<<constant_is<<")"<<change_function<<"(("<<b_by_a<<")*"<<main_function<<")"<<endl;
+    }
+    else if(can_minus>0){
+            cout<<"("<<constant_is<<")"<<change_function<<"(("<<a_by_b+plus1<<main_function<<")/("<<a_by_b+minus1+main_function<<")"<<endl;
+    }
+    else
+    {
+         cout<<"("<<constant_is<<")"<<change_function<<"(("<<main_function<<minus1<<a_by_b<<")/("<<a_by_b+plus1+main_function<<")"<<endl;
+    }
 }
 
 
@@ -557,7 +568,7 @@ void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,
         if(is_minus==true)
         {
           change_function+="ln";
-          can_minus++;
+          can_minus=0;
         }
     }
 
@@ -758,6 +769,7 @@ parse(string given_expression)
     string numerator,denominator,main_term="x";
     vector<int>secondBrackets,firstBrackets;
     vector<int> pos_of_x;
+  //  bool exist_power=false;
    int pos=0;
 
     loop.clear();
@@ -884,11 +896,13 @@ parse(string given_expression)
    ///for every constant
    ///----------------------------
 
-   if(two_power!=2){
+
     if(exist_constant==true)
     {
+         size_t pos = given_expression.find('^');
+        cout << "The first position of '^' is: " << pos <<endl;
         loop.clear();
-        function_for(1,constant_part);
+        function_for(1,pos);
         for(auto i:loop)
         {
             constant+=given_expression[i];
@@ -933,7 +947,7 @@ parse(string given_expression)
 
      cout<<"constant: "<<constant<<endl;
    }
-   }
+
 
 
      ///power
@@ -1190,7 +1204,8 @@ parse(string given_expression)
                }
                coefficient=reverse_string(coefficient);
 
-               cout<<"coefficient a_X: "<<coefficient<<endl;
+              if(coefficient!="") cout<<"coefficient a_X: "<<coefficient<<endl;
+              else cout<<"coefficient a_X: "<<1<<endl;
            }
          //  cout<<"saving_square_pos[0]: "<<saving_square_pos[0]<<endl;
 
@@ -1198,16 +1213,20 @@ parse(string given_expression)
          if(plus_pos!=0||minus_pos!=0){
            if((pos_of_x>minus_pos)&&minus_pos!=0||(pos_of_x>plus_pos)&&plus_pos!=0)
            {
-               for(int sign=below_part_start+3;sign<saving_square_pos[0];sign++)
+               for(int sign=below_part_start+2;sign<saving_square_pos[0];sign++)
+             for(int sign=saving_square_pos[0]-1;;sign--)
              {
-                   constant+=given_expression[sign];
+                 if(given_expression[sign]=='(') break;
+               constant+=given_expression[sign];
+
 
              }
              pos_of_constant=below_part_start+2;
+             constant=reverse_string(constant);
 
              cout<<"constant1: "<<constant<<endl;
            }
-           else ///1/((2*x)^2-2^2)
+           else ///1/((2*x^2)-2^2)
            {
                for(int sign=minus_pos+1;sign<power_part;sign++)
              {
@@ -1225,8 +1244,8 @@ parse(string given_expression)
 
        }
     }
-
 }
+
 
 
 
