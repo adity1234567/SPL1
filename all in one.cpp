@@ -146,7 +146,7 @@ string simplification_numerator_denominator(string numerator,string denominator)
 
      string ans=numerator_string+"/"+denominator_string;
 
-     cout<<"simplified string is: "<<ans<<endl;
+     //cout<<"simplified string is: "<<ans<<endl;
      return ans;
 
      ///jkhn minus lagbe tkhn minus kore dis....
@@ -164,13 +164,13 @@ string constant_with_coefficient(string constant_list,int size_constant_list,str
         constant+=convert_string_to_int(constant_list);
        // constant*=10;
 
-    cout<<constant<<endl;
+  //  cout<<constant<<endl;
 
 
     coefficient+=convert_string_to_int(coefficient_list);
        //coefficient*=10;
 
-    cout<<coefficient<<endl;
+   // cout<<coefficient<<endl;
   //  int constant=string_to_int(constant_list);
    // int coefficient=string_to_int(coefficient_list);
     int result=0;
@@ -267,17 +267,27 @@ void power_and_constant(string power,string constant)
    //cout<<numerator_two_int<<" "<<denominator_two_int<<endl;
    //cout<<numerator_constant_int<<" "<<denominator_constant_int<<endl;
 
+   cout<<power<<endl;
+   cout<<"here"<<endl;
+   if(power==""){
+        numerator_two_int=2;
+    if(constant!="1") cout<<"("<< numerator_constant_int/(denominator_constant_int*numerator_two_int)<<")";
+     else cout<<"(1/"<<numerator_two_int<<")";
+       cout<<main_function<<power1<<numerator_two_int<<endl;
+   }
+   else{
    if(denominator_two_int*denominator_constant_int!=1)
    {
-       cout<<"("<<numerator_two_int*numerator_constant_int<<"/"<<denominator_two_int*denominator_constant_int<<")*";
+       cout<<"("<<numerator_two_int/numerator_constant_int<<"/"<<denominator_two_int/denominator_constant_int<<")*";
 
        cout<<main_function<<power1<<"("<<numerator_two_int<<"/"<<denominator_two_int<<")"<<endl;
    }
    else
    {
-       cout<<"("<<numerator_two_int*numerator_constant_int<<")";
+       cout<<"("<<numerator_two_int/numerator_constant_int<<")";
 
        cout<<main_function<<power1<<numerator_two_int<<endl;
+   }
    }
 }
 
@@ -286,20 +296,27 @@ void calculate_power_part(string s,string constant,bool can_divide)
     int power_part=0;
     int power=0;
     //bool can_divide=false;
+    set<char>for_power_one;
     string power_one="";
     for(int i=0;i<s.size();i++)
     {
+        for_power_one.insert(s[i]);
         if(s[i]=='x'&&s[i+1]=='^')
         {
            power_part=i+1;
            power++;
         }
+
         if(s[i]=='/')
         {
             can_divide=true;
         }
     }
 
+    if(for_power_one.find('^')==for_power_one.end())
+    {
+      power_one="";
+    }
     if(power==1)
     {
       for(int i=power_part+1;i<s.size()-1;i++)
@@ -308,10 +325,17 @@ void calculate_power_part(string s,string constant,bool can_divide)
       }
     }
 
+    ///modify this-->5/5
+
     cout<<"power: "<<power_one<<" constant: "<<constant<<endl;
    // power_one++;
-   if(can_divide==false)power_and_constant(power_one+"/1",constant+"/1");
-    else power_and_constant(power_one+"/1",constant);
+   if(can_divide==false&&power_one!="")power_and_constant(power_one+"/1",constant+"/1");
+    else if(power>0&&power_one!="") power_and_constant(power_one+"/1",constant);
+    else if(power_one=="")
+    {
+       // cout<<"power """<<endl;
+        power_and_constant("",constant);
+    }
 
 }
 
@@ -343,7 +367,7 @@ void trigonmetry_with_coefficient(string input,string change_function,string coe
 
      //coefficient(input,change_function,coefficient);
 
-     cout<<"constant: "<<constant<<" coefficient: "<<coefficient<<endl;
+    // cout<<"constant: "<<constant<<" coefficient: "<<coefficient<<endl;
     if(constant!="1")
     {
         if(coefficient!="")
@@ -772,6 +796,7 @@ parse(string given_expression)
   //  bool exist_power=false;
    int pos=0;
 
+   x=0;
     loop.clear();
     function_for(0,given_expression.size());
 
@@ -838,8 +863,10 @@ parse(string given_expression)
 
     }
 
+
     ///24/4/2023-->work on every terms count
     int system=0;
+    cout<<"x: "<<x<<endl;
     if(two_power==2)
     {
         system=3;
@@ -854,7 +881,7 @@ parse(string given_expression)
     }
 
 
-
+     cout<<"system: "<<system<<endl;
 
      int j,k=0;
           for(auto i:loop)
@@ -900,7 +927,7 @@ parse(string given_expression)
     if(exist_constant==true)
     {
          size_t pos = given_expression.find('^');
-        cout << "The first position of '^' is: " << pos <<endl;
+       // cout << "The first position of '^' is: " << pos <<endl;
         loop.clear();
         function_for(1,pos);
         for(auto i:loop)
@@ -917,7 +944,7 @@ parse(string given_expression)
    // cout<<endl;
 
     // loop.clear();
-    cout<<"constant: "<<constant<<endl;
+   // cout<<"constant: "<<constant<<endl;
 
 
 
@@ -930,7 +957,7 @@ parse(string given_expression)
    {
        if(i==0) closeBracketPlace=secondBrackets[i];
    }
-   cout<<"openBracketPlace and close: "<<openBracketPlace<<" "<<closeBracketPlace<<endl;
+   //cout<<"openBracketPlace and close: "<<openBracketPlace<<" "<<closeBracketPlace<<endl;
    /**
      (3x)
      **/
@@ -945,7 +972,7 @@ parse(string given_expression)
 
 
 
-     cout<<"constant: "<<constant<<endl;
+    // cout<<"constant: "<<constant<<endl;
    }
 
 
@@ -1012,7 +1039,31 @@ parse(string given_expression)
        if(system==1)
        {
 
+      constant="";
 
+
+    if(exist_constant==true)
+    {
+
+         size_t pos = given_expression.find('*');
+        cout << "The first position of '*' is: " << pos <<endl;
+        loop.clear();
+        function_for(1,pos);
+        for(auto i:loop)
+        {
+            constant+=given_expression[i];
+        }
+
+    }
+    else if(exist_constant==false)
+    {
+        constant="1";
+    }
+
+   // cout<<endl;
+
+    // loop.clear();
+    cout<<"constant: "<<constant<<endl;
          // deal_with_only_x(power,main_term,constant);
           calculate_power_part(given_expression,constant,need_to_divide);
 
@@ -1117,7 +1168,7 @@ parse(string given_expression)
         }
        }
 
-       cout<<"new"<<endl;
+ //      cout<<"new"<<endl;
 
        if(system==3)
        {
