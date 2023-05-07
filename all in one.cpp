@@ -400,6 +400,63 @@ void trigonmetry_with_coefficient(string input,string change_function,string coe
     }
 }
 
+void calculate_trigonmetry_part(string input, string coefficient, string constant)
+{
+    vector<char> check_function;
+    int can_function = 0;
+    int pos_function = 0;
+
+   // cout << input << endl;
+    bool a_power = false;
+    for (int i = 0; i < input.size(); i++)
+    {
+        if (input[i] >= 'a' && input[i] <= 'z')
+        {
+            check_function.push_back(input[i]);
+            pos_function = i;
+
+            if (input[i] != 'x' && input[i + 1] == '^' && input[i + 2] == '2')
+            {
+                a_power = true;
+            }
+        }
+    }
+
+    string function_is = "";
+   /* for (auto i : check_function)
+    {
+        cout << i << " ";
+    }
+    cout << endl;*/
+    for (int i = 0; i < check_function.size(); i++)
+    {
+        function_is += check_function[i];
+    }
+
+    function_is = (check_function.size() != 1) ?
+        ((function_is == "tansec" || function_is == "sectan") ? "tanxsecx" :
+        ((function_is == "coseccot" || function_is == "cotcosec") ? "cotxcosecx" :
+        ((a_power == true) ? ((function_is == "sec") ? "sec^2x" : "cosec^2x") : (function_is + 'x')))) :
+        "x";
+    cout << function_is << endl;
+
+    string change_function = "";
+    change_function += (function_is == "sinx") * "cos";
+    change_function += (function_is == "cosx") * "(-1)*sin";
+    change_function += (function_is == "secx") * "tan";
+    change_function += (function_is == "cosecx") * "cot";
+    change_function += (function_is == "cotxcosecx") * "(-1)*cosec";
+    change_function += (function_is == "tanxsecx") * "sec";
+    change_function += (function_is == "e") * "e";
+    change_function += (function_is == "sec^2x") * "tan";
+    change_function += (function_is == "cosec^2x") * "(-1)*cot";
+    cout << "change function: " << change_function << endl;
+
+    trigonmetry_with_coefficient(input, change_function, coefficient, constant);
+}
+
+
+/*
 void calculate_trigonmetry_part(string input,string coefficient,string constant)
 {
     vector<char>check_function;
@@ -518,7 +575,7 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant)
     cout<<"change function: "<<change_function<<endl;
 
     trigonmetry_with_coefficient(input,change_function,coefficient,constant);
-}
+}*/
 
 
 
