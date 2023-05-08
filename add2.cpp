@@ -203,8 +203,9 @@ double with_limit(vector<string>&for_limit_calculation,int lower,int upper)
 int main()
 {
     int lower,upper;
-    cout<<"input upper and lower limit: "<<endl;
-    cin>>upper>>lower;
+     printf("input upper and lower limit: ");
+   scanf("%d,%d",&upper,&lower);
+
 
     vector<string>for_limit_calculation;
     with_limit(for_limit_calculation,lower,upper)
