@@ -291,10 +291,96 @@ void power_and_constant(string power,string constant)
    }
 }
 
+double sin_function(double bound) {
+    return sin(bound);
+}
+
+double cos_function(double bound) {
+    return cos(bound);
+}
+
+double sec_function(double bound) {
+    return 1/cos(bound);
+}
+
+double cosec_function(double bound) {
+    return 1/sin(bound);
+}
+
+double tan_function(double bound) {
+    return tan(bound);
+}
+
+double cot_function(double bound) {
+    return 1/tan(bound);
+}
+
+double e_function(double bound) {
+    return exp(bound);
+}
+
+typedef double (*TrigFunction)(double);
+
+map<string, TrigFunction> function_map = {
+    {"sin", sin_function},
+    {"cos", cos_function},
+    {"sec", sec_function},
+    {"cosec", cosec_function},
+    {"tan", tan_function},
+    {"cot", cot_function},
+    {"e", e_function}
+};
+
+double work_for_trigonmetry(string input, double bound) {
+    vector<char> check_function;
+    int can_function = 0;
+    int pos_function = 0;
+
+    //cout << input << endl;
+    bool a_power = false;
+    for (int i = 0; i < input.size(); i++) {
+        if (input[i] >= 'a' && input[i] <= 'z') {
+            if (input[i] != 'x') {
+                check_function.push_back(input[i]);
+            }
+            pos_function = i;
+
+            if (input[i] != 'x' && input[i + 1] == '^') {
+                if (input[i + 2] == '2') {
+                    a_power = true;
+                }
+            }
+        }
+    }
+
+    string function_is = "";
+   /* for (auto i : check_function) {
+        cout << i << " ";
+    }
+    cout << endl;*/
+    for (int i = 0; i < check_function.size(); i++) {
+        function_is += check_function[i];
+    }
+
+   // cout<<"func is: "<<function_is<<endl;
+    if (function_map.count(function_is)) {
+        TrigFunction func = function_map[function_is];
+        return func(bound);
+    } else if (a_power) {
+        if (function_is == "sec") {
+            return sec_function(bound);
+        } else if (function_is == "cosec") {
+            return cosec_function(bound);
+        }
+    }
+    return 0.0;
+}
+
+
 void calculate_power_part(string s,string constant,bool can_divide)
 {
     int power_part=0;
-    int power=0;
+    int power=0,bracket=0;
     //bool can_divide=false;
     set<char>for_power_one;
     string power_one="";
@@ -311,6 +397,11 @@ void calculate_power_part(string s,string constant,bool can_divide)
         {
             can_divide=true;
         }
+        if(s[i]==')')
+        {
+            bracket=i;
+            break;
+        }
     }
 
     if(for_power_one.find('^')==for_power_one.end())
@@ -319,9 +410,12 @@ void calculate_power_part(string s,string constant,bool can_divide)
     }
     if(power==1)
     {
-      for(int i=power_part+1;i<s.size()-1;i++)
+      for(int i=power_part+1;i<bracket;i++)
       {
+         // while(i!=bracket){
           power_one=power_one+s[i];
+         // }
+
       }
     }
 
@@ -337,18 +431,7 @@ void calculate_power_part(string s,string constant,bool can_divide)
         power_and_constant("",constant);
     }
 
-
 }
-
-bool check_type_two(string given_expression)
-{
-    return true;
-}
-bool check_type_one(string given_expression)
-{
-    return true;
-}
-
 
 void trigonmetry_with_coefficient(string input,string change_function,string coefficient,string constant)
 {
@@ -439,7 +522,7 @@ void calculate_trigonmetry_part(string input, string coefficient, string constan
         cout << i << " ";
     }
     cout << endl;*/
-    /*for (int i = 0; i < check_function.size(); i++)
+   /* for (int i = 0; i < check_function.size(); i++)
     {
         function_is += check_function[i];
     }
@@ -465,10 +548,10 @@ void calculate_trigonmetry_part(string input, string coefficient, string constan
 
     trigonmetry_with_coefficient(input, change_function, coefficient, constant);
 }
+
+
 */
-
-
-void calculate_trigonmetry_part(string input,string coefficient,string constant)
+void calculate_trigonmetry_part(string input,string coefficient,string constant,int upper,int lower)
 {
     vector<char>check_function;
     int can_function=0;
@@ -583,96 +666,102 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant)
         change_function+="(-1)*cot";
     }
 
-    cout<<"change function: "<<change_function<<endl;
+    cout<<"change function:\ "<<change_function<<endl;
+
+    ///within limit
+    ///-------------------------------------------------------------------------
+    double upper_num=0.0000000,lower_num=0.000000000;
+           cout<<"trigon"<<endl;
+            double modified_upper=(upper*180)/3.1416;
+            double modified_lower=(lower*180)/3.1416;
+            upper_num=work_for_trigonmetry(change_function,modified_upper);
+           lower_num=work_for_trigonmetry(change_function,modified_lower);
+           cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
+    ///-------------------------------------------------------------------------
 
     trigonmetry_with_coefficient(input,change_function,coefficient,constant);
 }
-string store_needed_items_a_by_b(string a_by_b)
-{
-    return a_by_b;
-}
-string store_needed_items_b_by_a(string b_by_a)
-{
-    return b_by_a;
-}
-string store_needed_items_cofficient(string coefficient)
-{
-    return coefficient;
-}
-string store_needed_items_constant(string constant)
-{
-    return constant;
-}
-string a_by_b="";
-string b_by_a="";
 
-vector<string> formula_with_constant(string main_string,string change_function,string constant,int can_minus,int can_plus,string coefficient,bool is_coefficient)
+double work_for_type_two(string input,int bound,string a_by_b)
 {
+   string str1="-",str2="x^2";
+      int pos1=input.find(str1);
+      int pos2=input.find(str2);
+      double div1=0.0000,div2=0.0000;
+      double a_plus_x=0.00000,a_minus_x1=0.00000,a_minus_x2=0.00000;
+      double ans=0.000000;
 
+
+        ///substring found
+        double modified_a_by_b=stoi(a_by_b);
+        cout<<"modified a_by_b: "<<modified_a_by_b<<endl;
+        a_plus_x=modified_a_by_b+bound;
+        a_minus_x1=bound-modified_a_by_b;
+        a_minus_x2=modified_a_by_b-bound;
+
+        div1=a_plus_x/a_minus_x2;
+        div2=a_minus_x1/a_plus_x;
+
+        if(pos1<pos2)
+        {
+            ans=log(div1);
+        }
+        else ans=log(div2);
+
+    cout<<"ans is: "<<ans<<endl;
+    return ans;
+}
+
+void  formula_with_constant(string main_string,string change_function,string constant,int can_minus,int can_plus,string coefficient,bool is_coefficient,int upper,int lower)
+{
     int int_constant=convert_string_to_int(constant);
     int_constant=2*int_constant;
     string string_constant=convert_int_to_string(int_constant);
     string constant_is,plus1="+",minus1="-";
     string main_function="x";
     string a_by_b="",b_by_a="";
-    vector<string>storing_items;
-    storing_items.push_back(constant_is);
 
     it_can_be(is_coefficient==true)
     {
-        storing_items.push_back(coefficient);
         int int_coefficient=convert_string_to_int(coefficient);
         cout<<"before main coefficient: "<<int_coefficient<<" "<<int_constant<<endl;
         a_by_b=simplification_numerator_denominator(constant,coefficient);
         b_by_a=simplification_numerator_denominator(coefficient,constant);
-       storing_items.push_back(a_by_b);
-       storing_items.push_back(b_by_a);
-       // store_needed_items(a_by_b,b_by_a,constant,cofficient);
-       store_needed_items_a_by_b(a_by_b);
-       store_needed_items_b_by_a(b_by_a);
-       store_needed_items_cofficient(coefficient);
         int_coefficient=int_coefficient*int_constant;
         cout<<"after: "<<int_coefficient<<endl;
         string string_coefficient=convert_int_to_string(int_coefficient);
 
         constant_is=simplification_numerator_denominator("1",string_coefficient);
-
-
     }
     it_can_be(is_coefficient==false)
     {
-        coefficient="1";
-        storing_items.push_back(coefficient);
         constant_is=simplification_numerator_denominator("1",string_constant);
          a_by_b=simplification_numerator_denominator(constant,"1");
          b_by_a=simplification_numerator_denominator("1",constant);
-         storing_items.push_back(a_by_b);
-         storing_items.push_back(b_by_a);
     }
 
     cout<<"constant is: "<<constant_is<<endl;
-
-   store_needed_items_constant(constant_is);
+   cout<<"a_by_b: "<<a_by_b<<endl;
+    double upper_num=work_for_type_two(change_function,upper,a_by_b);
+    double lower_num=work_for_type_two(change_function,lower,a_by_b);
+    cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
     if(can_plus>0)
     {
        cout<<"("<<constant_is<<")"<<change_function<<"(("<<b_by_a<<")*"<<main_function<<")"<<endl;
     }
-    else if(can_minus>0)
-    {
+    else if(can_minus>0){
             cout<<"("<<constant_is<<")"<<change_function<<"(("<<a_by_b+plus1<<main_function<<")/("<<a_by_b+minus1+main_function<<")"<<endl;
     }
     else
     {
          cout<<"("<<constant_is<<")"<<change_function<<"(("<<main_function<<minus1<<a_by_b<<")/("<<a_by_b+plus1+main_function<<")"<<endl;
     }
-
-   return storing_items;
 }
 
 
 /// calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient);
 
-vector<string> calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,bool is_minus,string constant,string coefficient,bool is_coefficient)
+void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,bool is_minus,string constant,string coefficient,bool is_coefficient,int upper,int lower)
 {
     ///1/((25^2-(6*x)^2)
     string change_function="";
@@ -704,12 +793,10 @@ vector<string> calcute_formulas(string formula,int pos_constant,int pos_of_x,boo
 
     cout<<"calculate formula-change function: "<<change_function<<endl;
 
+
     ///string main_string,string change_function,string constant,int can_minus,int can_plus
     ///formula_with_constant(string main_string,string change_function,string constant,int can_minus,int can_plus)
-    formula_with_constant(formula,change_function,constant,can_minus,can_plus,coefficient,is_coefficient);
-    vector<string>storing_items= formula_with_constant(formula,change_function,constant,can_minus,can_plus,coefficient,is_coefficient);
-
-  return storing_items;
+    formula_with_constant(formula,change_function,constant,can_minus,can_plus,coefficient,is_coefficient,upper,lower);
 }
 
 int count_multi=0,count_power=0,count_divide=0,x=0;
@@ -751,9 +838,8 @@ int terms_checking(const string& given_expression, int i=0) {
 
 }
 
-double with_limit(string for_limit_calculation,int lower,int upper);
 
-vector<string> parse(string given_expression,int lower,int upper)
+parse(string given_expression,int upper,int lower)
 {
 
 
@@ -788,8 +874,7 @@ vector<string> parse(string given_expression,int lower,int upper)
                 if (signs_of_expression.empty())
                 {
                     terms_pos.push_back(check);
-
-                   arr_terms_pos[another_check]=check;
+                    arr_terms_pos[another_check]=check;
 
                     count_term++;
                     another_check++;
@@ -868,8 +953,6 @@ vector<string> parse(string given_expression,int lower,int upper)
         add_terms+=given_expression[i];
     }
     terms_string.push_back(add_terms);
-   // vector<string>for_limit_calculation;
-
 
     cout<<"terms_string.size()"<<terms_string.size()<<endl;
      for(int i=0;i<terms_string.size();i++)
@@ -881,9 +964,6 @@ vector<string> parse(string given_expression,int lower,int upper)
     {
         cout<<"string is: "<<terms_string[i]<<endl;
 
-        ///with limit
-        ///------------------
-        with_limit(terms_string[i],lower,upper);
         string given_expression="";
         given_expression=terms_string[i];
 
@@ -982,7 +1062,6 @@ vector<string> parse(string given_expression,int lower,int upper)
 
     ///24/4/2023-->work on every terms count
     int system=0;
-
     cout<<"x: "<<x<<endl;
     if(two_power==2)
     {
@@ -991,7 +1070,6 @@ vector<string> parse(string given_expression,int lower,int upper)
     else if(x==1)
     {
         system=1;
-
     }
     else if(is_trigonmetry==true)
     {
@@ -1182,12 +1260,8 @@ vector<string> parse(string given_expression,int lower,int upper)
 
     // loop.clear();
     cout<<"constant: "<<constant<<endl;
-    only_x=true;
          // deal_with_only_x(power,main_term,constant);
-         //only_x_type(gievn_expression,constant,only_x);
           calculate_power_part(given_expression,constant,need_to_divide);
-          check_type_two(given_expression);
-
 
        }
        /**
@@ -1198,6 +1272,7 @@ vector<string> parse(string given_expression,int lower,int upper)
        if(system==2)
        {
         //(1/(a2+x2)) dx = (1/a) tan-1(x/a)
+
            int position_coefficient=0;
            int first_bracket=0;
            string coefficient="";
@@ -1282,11 +1357,11 @@ vector<string> parse(string given_expression,int lower,int upper)
            }
 
 
-        if(first_char!=0) calculate_trigonmetry_part(given_expression,coefficient,constant);
+        if(first_char!=0) calculate_trigonmetry_part(given_expression,coefficient,constant,upper,lower);
         else
         {
             constant="1";
-            calculate_trigonmetry_part(given_expression,coefficient,constant);
+            calculate_trigonmetry_part(given_expression,coefficient,constant,upper,lower);
         }
        }
 
@@ -1294,8 +1369,6 @@ vector<string> parse(string given_expression,int lower,int upper)
 
        if(system==3)
        {
-         check_type_one(given_expression);
-
            int below_part_start=0;
            int plus_pos=0;
            int minus_pos=0;
@@ -1415,219 +1488,14 @@ vector<string> parse(string given_expression,int lower,int upper)
            }
          }
 
-         calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient);
-
-         vector<string>storing_items=calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient);
-
+         calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient,upper,lower);
 
        }
     }
 }
 
 
-double sin_function(double bound) {
-    return sin(bound);
-}
 
-double cos_function(double bound) {
-    return cos(bound);
-}
-
-double sec_function(double bound) {
-    return 1/cos(bound);
-}
-
-double cosec_function(double bound) {
-    return 1/sin(bound);
-}
-
-double tan_function(double bound) {
-    return tan(bound);
-}
-
-double cot_function(double bound) {
-    return 1/tan(bound);
-}
-
-double e_function(double bound) {
-    return exp(bound);
-}
-
-typedef double (*TrigFunction)(double);
-
-map<string, TrigFunction> function_map = {
-    {"sin", sin_function},
-    {"cos", cos_function},
-    {"sec", sec_function},
-    {"cosec", cosec_function},
-    {"tan", tan_function},
-    {"cot", cot_function},
-    {"e", e_function}
-};
-
-double work_for_trigonmetry(string input, double bound) {
-    vector<char> check_function;
-    int can_function = 0;
-    int pos_function = 0;
-
-    //cout << input << endl;
-    bool a_power = false;
-    for (int i = 0; i < input.size(); i++) {
-        if (input[i] >= 'a' && input[i] <= 'z') {
-            if (input[i] != 'x') {
-                check_function.push_back(input[i]);
-            }
-            pos_function = i;
-
-            if (input[i] != 'x' && input[i + 1] == '^') {
-                if (input[i + 2] == '2') {
-                    a_power = true;
-                }
-            }
-        }
-    }
-
-    string function_is = "";
-   /* for (auto i : check_function) {
-        cout << i << " ";
-    }
-    cout << endl;*/
-    for (int i = 0; i < check_function.size(); i++) {
-        function_is += check_function[i];
-    }
-
-   // cout<<"func is: "<<function_is<<endl;
-    if (function_map.count(function_is)) {
-        TrigFunction func = function_map[function_is];
-        return func(bound);
-    } else if (a_power) {
-        if (function_is == "sec") {
-            return sec_function(bound);
-        } else if (function_is == "cosec") {
-            return cosec_function(bound);
-        }
-    }
-    return 0.0;
-}
-
-
-int function_i_increase(int i)
-{
-    i++;
-    return i;
-}
-
-bool check_is_trigonmetry(string str)
-{
-    bool check=false;
-    //string str = "Calculate the value of sin(x) + cos(x)";
-    string search_terms[] = {"sin", "cos", "tan", "asin", "acos", "atan"};
-
-    for (int i = 0; i < sizeof(search_terms)/sizeof(search_terms[0]); i++) {
-        string term = search_terms[i];
-        int pos = str.find(term);
-        if (pos != string::npos) {
-                check=true;
-        }
-    }
-    return check;
-}
-
-double work_for_type(string input,int bound)
-{
-    return bound;
-}
-
-
-double work_for_type_two(string input,int bound,string a_by_b)
-{
-   string str1="-",str2="x^2";
-      int pos1=input.find(str1);
-      int pos2=input.find(str2);
-      double div1=0.0000,div2=0.0000;
-      double a_plus_x=0.00000,a_minus_x1=0.00000,a_minus_x2=0.00000;
-      double ans=0.000000;
-
-    if (pos1 != string::npos&& pos2 != string::npos)
-    {
-        ///substring found
-        double modified_a_by_b=convert_string_to_int(a_by_b);
-        a_plus_x=modified_a_by_b+bound;
-        a_minus_x1=bound-modified_a_by_b;
-        a_minus_x2=modified_a_by_b-bound;
-
-        div1=a_plus_x/a_minus_x2;
-        div2=a_minus_x1/a_plus_x;
-
-        if(pos1<pos2)
-        {
-            ans=log(div1);
-        }
-        else ans=log(div2);
-    }
-}
-double with_limit(string for_limit_calculation,int lower,int upper)
-{
-    int i=0;
-    vector<double>store_diff;
-    double upper_num,lower_num,difference=0.000000000;
-   // while(i<for_limit_calculation.size())
-    //{
-        bool check=check_is_trigonmetry(for_limit_calculation);
-        bool only_x_type=check_type_two(for_limit_calculation);
-        bool x_type=check_type_one(for_limit_calculation);
-
-        if(check==true)
-        {
-            cout<<"trigon"<<endl;
-            double modified_upper=(upper*180)/3.1416;
-            double modified_lower=(lower*180)/3.1416;
-           upper_num=work_for_trigonmetry(for_limit_calculation,modified_upper);
-           lower_num=work_for_trigonmetry(for_limit_calculation,modified_lower);
-
-           //difference=upper_num-lower_num;
-        }
-        else if(only_x_type==true)
-        {
-
-            cout<<"only x"<<endl;
-            upper_num=work_for_type(for_limit_calculation,upper);
-            lower_num=work_for_type(for_limit_calculation,lower);
-
-        }
-        else
-        {
-            ///a_by_b ar implementation
-            cout<<"only x two"<<endl;
-            upper_num=work_for_type_two(for_limit_calculation,upper,a_by_b);
-            lower_num=work_for_type_two(for_limit_calculation,lower,a_by_b);
-
-            //difference=upper_num-lower_num;
-        }
-        /*if(power==true)
-           {
-               int int_power=convert_string_to_int(power);
-
-               upper_num=pow(upper_num,power);
-               lower_num=pow(lower_num,power);
-           }
-           if(constant==true)
-           {
-               double double_constant=convert_string_to_int(constant);
-
-               upper_num=constant*upper_num;
-               lower_num=constant*lower_num;
-           }
-
-           difference=upper_num-lower_num;
-           store_diff.push_back(difference);
-*/
-      //  function_i_increase(i);
-    //}
-      cout<< "upper_num: "<<upper_num<<" lower_num: "<<lower_num;
-
-
-}
 
 
 
@@ -1635,19 +1503,11 @@ int main()
 {
     string s;
     cin>>s;
-    int lower,upper;
 
-
+    int upper,lower;
     printf("input upper and lower limit: ");
-    scanf("%d,%d",&upper,&lower);
-
-
-
-     parse(s,lower,upper);
-
-
-
+    cin>>upper>>lower;
+     parse(s,upper,lower);
 }
-
 
 
