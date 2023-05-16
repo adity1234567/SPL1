@@ -1067,7 +1067,7 @@ parse(string given_expression,int upper,int lower)
     {
         system=3;
     }
-    else if(x==1)
+    else if(x==1&&is_trigonmetry==false)
     {
         system=1;
     }
@@ -1273,6 +1273,7 @@ parse(string given_expression,int upper,int lower)
        {
         //(1/(a2+x2)) dx = (1/a) tan-1(x/a)
 
+        cout<<"system 2"<<endl;
            int position_coefficient=0;
            int first_bracket=0;
            string coefficient="";
@@ -1293,11 +1294,13 @@ parse(string given_expression,int upper,int lower)
                    first_bracket=i;
                }
            }
-           ///sec(x)tan(x)
+           ///sec(4*x)tan(4*x)
            loop.clear();
-      //  cout<<"position of coefficient and first bracket: "<<position_coefficient<<" "<<first_bracket<<endl;
+      cout<<"position of coefficient and first bracket: "<<position_coefficient<<" "<<first_bracket<<endl;
 
-      int main_str_size=0;
+        int main_str_size=0;
+        if(waiting_x.size()==2){
+         int main_str_size=0;
          for(int i=0;i<waiting_x.size()/2;i++){
 
                int k=waiting_x[i]-2;
@@ -1309,8 +1312,25 @@ parse(string given_expression,int upper,int lower)
                i++;
 
         }
+        }
+        else
+        {
+            //(x)+(35*sin(4*x))
 
-      cout<<"co-efficient: "<< coefficient<<endl;
+            for(int i=0;i<waiting_x.size();i++){
+
+               int k=waiting_x[i]-2;
+               //cout<<"k: "<<endl;
+               while(given_expression[k]!='(')
+               {
+                    coefficient+=given_expression[k];
+                    // cout<<"check coefficient"<< coefficient<<endl;
+                    k--;
+               }
+               i++;
+        }
+        }
+    cout<<"co-efficient: "<< coefficient<<endl;
 
     /**  for(int i=plus-3;;i--)
          {
@@ -1351,11 +1371,12 @@ parse(string given_expression,int upper,int lower)
                    }
 
 
-               cout<<"first char: "<<first_char<<endl;
+               //cout<<"first char: "<<first_char<<endl;
 
 
            }
 
+           cout<<"constant: "<<constant<<endl;
 
         if(first_char!=0) calculate_trigonmetry_part(given_expression,coefficient,constant,upper,lower);
         else
