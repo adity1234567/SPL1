@@ -1,0 +1,9 @@
+extras
+---------
+
+1.ax+b/cx+d type
+
+(3*x+5)/(4*x+7)
+
+2. sinAsinB,sinAcosB,cosAcosB
+
