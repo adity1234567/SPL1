@@ -56,12 +56,19 @@ void extra(string given_expression)
         nicher_constant += given_expression[i];
     }
 
+    string upor_extra_constant_sign="";
     for (int i = bracket1 - 1; i >= 0; i--)
     {
-        if (given_expression[i] == '+' || given_expression[i] == '-')
+        if (given_expression[i] == '+' )
             {
+                upor_extra_constant_sign="+";
                 break;
             }
+        else if(given_expression[i] == '-')
+        {
+             upor_extra_constant_sign="-";
+                break;
+        }
         reverse_upor_extra_constant += given_expression[i];
     }
 
@@ -77,7 +84,7 @@ void extra(string given_expression)
     cout << "upor_constant: " << upor_constant << endl;
     cout << "upor_extra_constant: " << upor_extra_constant << endl;
 
-    string nicher_extra_constant = "";
+    string nicher_extra_constant = "",nicher_extra_constant_sign="";
     auto it = signs.begin();
 
     if (signs.size() == 1)
@@ -85,7 +92,7 @@ void extra(string given_expression)
         cout << "*it and sign_pos: " << *it << " " << signs_pos[1] << endl;
         if (*it == '+')
         {
-            nicher_extra_constant += "-";
+            nicher_extra_constant_sign += "-";
             for (int pos = signs_pos[1] + 1; given_expression[pos] != ')'; pos++)
             {
                 nicher_extra_constant += given_expression[pos];
@@ -94,6 +101,7 @@ void extra(string given_expression)
     }
     else
     {
+        nicher_extra_constant_sign += "+";
         for (int pos = signs_pos[1] + 1; given_expression[pos] != ')'; pos++)
         {
             nicher_extra_constant += given_expression[pos];
@@ -113,17 +121,26 @@ void extra(string given_expression)
 
      if(signs.size()==1)
      {
-         extra_constant=abs(new_extra_constant1-new_extra_constant2);
+         extra_constant_int=abs(new_extra_constant1-new_extra_constant2);
+         extra_constant=convert_int_to_string(extra_constant_int);
+         if(new_extra_constant1>new_extra_constant2)
+         {
+             cout<<upor_extra_constant_sign<<extra_constant<<endl;
+         }
+         else
+         {
+              cout<<nicher_extra_constant_sign<<extra_constant<<endl;
+         }
      }
      else
      {
-                  extra_constant=abs(new_extra_constant1+new_extra_constant2);
-
+        extra_constant=abs(new_extra_constant1+new_extra_constant2);
      }
 
 }
 
-int main() {
+int main()
+{
     string s;
     cin >> s;
     extra(s);
