@@ -7,3 +7,5 @@ extras
 
 2. sinAsinB,sinAcosB,cosAcosB
 
+3.uv --> e^x on going...nxt -->trigonmetry
+
