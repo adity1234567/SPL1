@@ -1452,16 +1452,21 @@ parse(string given_expression,int upper,int lower)
 
     }
 
+    int coefficient1=0,coefficient2=0,main_coefficient=0,plus_coefficient_int=0,minus_coefficient_int=0;
+    string sign="/",output1="",output2="",main="x";
+
+    if(is_trigonmetry==true){
     vector<int>pos1=find_substring(given_expression,"sin");
     vector<int>pos2=find_substring(given_expression,"cos");
-    int coefficient1=0,coefficient2=0,main_coefficient=0,plus_coefficient_int=0,minus_coefficient_int=0;
+
     vector<int>coefficients=extractNumbers(given_expression);
-    string sign="/",output1="",output2="",main="x";
+
 
     coefficient1=coefficients[0];
     coefficient2=coefficients[1];
 
     cout<<"coefficient1 and 2: "<<coefficient1<<" "<<coefficient2<<endl;
+    }
     if(coefficient1!=coefficient2)
     {
         system=6;
@@ -1481,9 +1486,14 @@ parse(string given_expression,int upper,int lower)
     {
         system=1;
     }
-    else if(is_trigonmetry==true&&coefficient1==coefficient2)
+    else if(is_trigonmetry==true)
     {
-        system=2;
+        if(coefficient1==0||coefficient2==0) system=2;
+        else if(coefficient1!=0&&coefficient2!=0)
+        {
+            if(coefficient1==coefficient2)
+                system=2;
+        }
     }
     else if(x==2&&can_divide==true&&is_trigonmetry==false)
     {
@@ -1955,7 +1965,7 @@ int main()
     int upper,lower;
     printf("input upper and lower limit: ");
     cin>>upper>>lower;
-     parse(s,upper,lower);
+    parse(s,upper,lower);
 }
 
 
