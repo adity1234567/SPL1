@@ -1,9 +1,10 @@
-#include<stdio.h>
+#include<bits/stdc++.h>
 #include<math.h>
 #include<stdlib.h>
 #include<string.h>
+using namespace std;
 
-
+/*
 ///first equation of motion
 motion1_distance(int upper,int lower)
 {
@@ -29,6 +30,8 @@ motion2_time(int upper,int lower)
 {
     return upper-lower;
 }
+*/
+
 
 void replaceVariable(char *equation, const char *oldVar, const char *newVar) {
     char *pos = strstr(equation, oldVar);
@@ -47,10 +50,49 @@ void replaceVariable(char *equation, const char *oldVar, const char *newVar) {
         pos = strstr(equation + newPos + newLen, oldVar);
     }
 }
+motion_distance(string equation)
+{
+    int upper=0,lower=0;
+    cout<<"distance: "<<equation;
+    
+}
+motion_velocity(string equation)
+{
+    int upper=0,lower=0;
+    cout<<"velocity to distance: ";
+    parse(equation,upper,lower);
+}
 
+motion_acceleration(string equation)
+{
+    int upper=0,lower=0;
+    cout<<"velocity to distance: ";
+    motion_velocity(equation);
+    
+   
+}
+
+char about_motion()
+{
+     printf("\n\n");
+     printf("motion\n");
+     string dashes(7, '-');
+     char input;
+     cout<<dashes;
+     printf("\n-->relation between velocity and acceleration\n-->relation between distance(d) and acceleration(a)\n-->relation between distance and velocity\n");
+     printf("\n\n");
+
+     cout<<"the equation want to input is about:\n--> distance(d),velocity(v) or acceleration(a)?:  ";
+     cin>>input;
+
+    //(input=='d')?
+     return input;
+
+
+}
 int main()
 {
-    printf("The velocity of a particle moving along the x-axis is ?.At t=0,its position is 3.\n");
+    /*printf("The velocity of a particle moving along the x-axis is ?.At t=0,its position is 3.\n");
     printf("what is the position of the particle,s(t),at any time t?");
     string equation;
     printf("v(t)= ");
@@ -68,5 +110,32 @@ int main()
     ///v-->s
 
     ///a-->v-->s
+
+
+
+    printf("input the equation of acceleration: ");
+    */
+
+    int type=0;
+
+    printf("what to want to do?\n");
+    string dashes(20, '-'),equation;
+    cout<<dashes;
+    printf("\n-->motion\n-->force\n-->work\n\n\n");
+
+    printf("enter your type(in number): ");
+    scanf("%d",&type);
+
+
+    if(type==1) char ch=about_motion();
+
+    cout<<"equation is: "<<ch<<"(t) =";
+
+    cin>>equation;
+
+     (ch=='v')? motion_velocity(equation);
+     (ch=='a')? motion_accleration(equation):motion_distance(equation);
+    
+
 
 }
