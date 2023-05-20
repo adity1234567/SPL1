@@ -184,6 +184,7 @@ string constant_with_coefficient(string constant_list,int size_constant_list,str
 }
 
 
+
 void power_and_constant(string power,string constant)
 {
 
@@ -432,6 +433,175 @@ void calculate_power_part(string s,string constant,bool can_divide)
     }
 
 }
+string extractExpression(const string& input) {
+    string expression;
+
+    size_t startPos = input.find("(");
+
+    if (startPos != string::npos) {
+        size_t endPos = input.find(")", startPos);
+
+        if (endPos != string::npos && endPos > startPos) {
+            expression = input.substr(startPos + 1, endPos - startPos - 1);
+        }
+    }
+
+    return expression;
+}
+string removeSubstring(const string& str, const string& substr) {
+    string result = str;
+
+    size_t pos = result.find(substr);
+
+    if (pos != string::npos) {
+        result.erase(pos, substr.length());
+    }
+
+    return result;
+}
+
+
+void extra(string given_expression)
+ {
+    bool can_divide = true;
+    int  x=2,i = 0, bracket2 = 0, bracket1 = 0;
+    set<char> signs;
+    vector<int> signs_pos;
+    vector<int> multi_pos;
+
+    if (x == 2 && can_divide == true)
+        {
+        while (i < given_expression.size())
+         {
+            if (given_expression[i] == ')' && given_expression[i + 1] == '/' && given_expression[i + 2] == '(')
+            {
+                bracket2 = i + 2;
+                bracket1 = i;
+            }
+            if (given_expression[i] == '+')
+            {
+                signs.insert('+');
+                signs_pos.push_back(i);
+            }
+            if (given_expression[i] == '-')
+            {
+                signs.insert('-');
+                signs_pos.push_back(i);
+            }
+            if (given_expression[i] == '*')
+            {
+                multi_pos.push_back(i);
+            }
+            i++;
+        }
+    }
+
+    string nicher_constant = "", reverse_upor_constant = "", upor_constant = "";
+    string reverse_upor_extra_constant = "", upor_extra_constant = "";
+
+    for (int i = bracket2 + 1; given_expression[i] != '*'; i++)
+    {
+        nicher_constant += given_expression[i];
+    }
+
+    string upor_extra_constant_sign="";
+    for (int i = bracket1 - 1; i >= 0; i--)
+    {
+        if (given_expression[i] == '+' )
+            {
+                upor_extra_constant_sign="+";
+                break;
+            }
+        else if(given_expression[i] == '-')
+        {
+             upor_extra_constant_sign="-";
+                break;
+        }
+        reverse_upor_extra_constant += given_expression[i];
+    }
+
+    upor_extra_constant = reverse_string(reverse_upor_extra_constant);
+    cout << "nicher_constant: " << nicher_constant << endl;
+
+    for (int i = multi_pos[0] - 1; given_expression[i] != '('; i--)
+    {
+        reverse_upor_constant += given_expression[i];
+    }
+
+    upor_constant = reverse_string(reverse_upor_constant);
+    cout << "upor_constant: " << upor_constant << endl;
+    cout << "upor_extra_constant: " << upor_extra_constant << endl;
+
+    string nicher_extra_constant = "",nicher_extra_constant_sign="";
+    auto it = signs.begin();
+
+    if (signs.size() == 1)
+    {
+        cout << "*it and sign_pos: " << *it << " " << signs_pos[1] << endl;
+        if (*it == '+')
+        {
+            nicher_extra_constant_sign += "-";
+            for (int pos = signs_pos[1] + 1; given_expression[pos] != ')'; pos++)
+            {
+                nicher_extra_constant += given_expression[pos];
+            }
+        }
+    }
+    else
+    {
+        nicher_extra_constant_sign += "+";
+        for (int pos = signs_pos[1] + 1; given_expression[pos] != ')'; pos++)
+        {
+            nicher_extra_constant += given_expression[pos];
+        }
+    }
+
+    cout << "nicher_extra_constant: " << nicher_extra_constant << endl;
+
+    int nicher_constant_int=0,upor_extra_constant_int=0,nicher_extra_constant_int,square_nicher_constant=0,new_extra_constant=0,upor_constant_int;
+    int extra_constant_int=0,new_extra_constant1,new_extra_constant2;
+    string extra_constant;
+
+     nicher_constant_int=convert_string_to_int(nicher_constant);
+     cout<<"nicher_constant_int: "<<nicher_constant_int<<endl;
+     upor_extra_constant_int=convert_string_to_int(upor_extra_constant);
+     upor_constant_int=convert_string_to_int(upor_constant);
+     nicher_extra_constant_int=convert_string_to_int(nicher_extra_constant);
+     square_nicher_constant=nicher_constant_int*nicher_constant_int;
+     new_extra_constant1=nicher_constant_int*upor_extra_constant_int;
+     new_extra_constant2=nicher_extra_constant_int*upor_constant_int;
+
+     cout<<"new_extra_constant1 &constant2: "<<new_extra_constant1<<" "<<new_extra_constant2<<endl;
+     if(signs.size()==1)
+     {
+         extra_constant_int=abs(new_extra_constant1-new_extra_constant2);
+         cout<<"extra_constant_int: "<<extra_constant_int<<endl;
+         extra_constant=convert_int_to_string(extra_constant_int);
+         cout<<"extra_constant: "<<extra_constant<<endl;
+         if(new_extra_constant1>new_extra_constant2)
+         {
+             cout<<"extra_constant: "<<upor_extra_constant_sign<<extra_constant<<endl;
+         }
+         else
+         {
+              cout<<"extra_constant: "<<nicher_extra_constant_sign<<extra_constant<<endl;
+         }
+     }
+     else
+     {
+        extra_constant=abs(new_extra_constant1+new_extra_constant2);
+     }
+     cout<<"extra_constant: "<<extra_constant<<endl;
+      string expression = extractExpression(given_expression);
+    string expression1=removeSubstring(given_expression,expression);
+
+  //  cout<<expression1<<endl;
+   expression1=removeSubstring(expression1,"()/");
+    cout<<"("<<upor_constant+"/"+convert_int_to_string(square_nicher_constant)+")+("+extra_constant+"/"+convert_int_to_string(square_nicher_constant)+")ln"+expression1<<endl;
+
+}
+
+
 
 void trigonmetry_with_coefficient(string input,string change_function,string coefficient,string constant)
 {
@@ -1118,6 +1288,10 @@ parse(string given_expression,int upper,int lower)
     {
         system=2;
     }
+    else if(x==2&&can_divide==true&&is_trigonmetry==false)
+    {
+        system=5;
+    }
 
 
 
@@ -1279,6 +1453,10 @@ parse(string given_expression,int upper,int lower)
        if(system==4)
        {
            only_variable(digits);
+       }
+       if(system==5)
+       {
+           extra(given_expression);
        }
        if(system==1)
        {
