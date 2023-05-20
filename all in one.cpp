@@ -2,7 +2,8 @@
 using namespace std;
 
 vector<int>loop;
-
+string saved_answers="";
+vector<string>all_answers;
 void function_for(int i,int n)
 {
 
@@ -270,26 +271,45 @@ void power_and_constant(string power,string constant)
 
    cout<<power<<endl;
    cout<<"here"<<endl;
-   if(power==""){
+   if(power=="")
+    {
         numerator_two_int=2;
-    if(constant!="1") cout<<"("<< numerator_constant_int/(denominator_constant_int*numerator_two_int)<<")";
-     else cout<<"(1/"<<numerator_two_int<<")";
-       cout<<main_function<<power1<<numerator_two_int<<endl;
+    if(constant!="1")
+    {
+        cout<<"("<< simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(denominator_constant_int*numerator_two_int))<<")";
+        saved_answers="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(denominator_constant_int*numerator_two_int))+")";
+    }
+    else
+    {
+        cout<<"(1/"<<numerator_two_int<<")";
+        cout<<main_function<<power1<<numerator_two_int<<endl;
+        saved_answers= "(1/"+convert_int_to_string(numerator_two_int)+")"+main_function+power1+convert_int_to_string(numerator_two_int);
+    }
    }
-   else{
+   else
+   {
    if(denominator_two_int*denominator_constant_int!=1)
    {
-       cout<<"("<<numerator_two_int/numerator_constant_int<<"/"<<denominator_two_int/denominator_constant_int<<")*";
+       cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_two_int),convert_int_to_string(numerator_constant_int))<<"/"<<simplification_numerator_denominator(convert_int_to_string(numerator_two_int),convert_int_to_string(numerator_constant_int))<<")*";
 
        cout<<main_function<<power1<<"("<<numerator_two_int<<"/"<<denominator_two_int<<")"<<endl;
+       saved_answers+="("+simplification_numerator_denominator(convert_int_to_string(numerator_two_int),convert_int_to_string(numerator_constant_int))+"/";
+       saved_answers+=simplification_numerator_denominator(convert_int_to_string(denominator_two_int),convert_int_to_string(denominator_constant_int))+")*";
+       saved_answers+=main_function+power1+"("+convert_int_to_string(numerator_two_int)+"/"+convert_int_to_string(denominator_two_int)+")";
+
+
    }
    else
    {
        cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))<<")";
 
        cout<<main_function<<power1<<numerator_two_int<<endl;
+       saved_answers+="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))+")"+main_function+power1+convert_int_to_string(numerator_two_int);
    }
    }
+
+   all_answers.push_back(saved_answers);
+   saved_answers="";
 }
 
 double sin_function(double bound) {
@@ -422,10 +442,16 @@ void calculate_power_part(string s,string constant,bool can_divide)
 
     ///modify this-->5/5
 
-    cout<<"power: "<<power_one<<" constant: "<<constant<<endl;
+    //cout<<"power: "<<power_one<<" constant: "<<constant<<endl;
    // power_one++;
-   if(can_divide==false&&power_one!="")power_and_constant(power_one+"/1",constant+"/1");
-    else if(power>0&&power_one!="") power_and_constant(power_one+"/1",constant);
+    if(can_divide==false&&power_one!="")
+    {
+         power_and_constant(power_one+"/1",constant+"/1");
+    }
+    else if(power>0&&power_one!="")
+    {
+        power_and_constant(power_one+"/1",constant);
+    }
     else if(power_one=="")
     {
        // cout<<"power """<<endl;
@@ -599,6 +625,10 @@ void extra(string given_expression)
    expression1=removeSubstring(expression1,"()/");
     cout<<"("<<upor_constant+"/"+convert_int_to_string(square_nicher_constant)+")+("+extra_constant+"/"+convert_int_to_string(square_nicher_constant)+")ln"+expression1<<endl;
 
+    saved_answers+="("+upor_constant+"/"+convert_int_to_string(square_nicher_constant)+")+("+extra_constant+"/"+convert_int_to_string(square_nicher_constant)+")ln"+expression1;
+
+    all_answers.push_back(saved_answers);
+    saved_answers="";
 }
 
 
@@ -639,10 +669,13 @@ void trigonmetry_with_coefficient(string input,string change_function,string coe
           //cout<<"1st"<<endl;
           simplification_numerator_denominator(constant,coefficient);
           cout<<"("<<constant<<"/"<<coefficient<<")"<<change_function+"("+coefficient+main_function+")"<<endl;
+          saved_answers+="("+constant+"/"+coefficient+")"+change_function+"("+coefficient+main_function+")";
+
         }
         else
         {
            cout<<constant<<change_function+"("+coefficient+main_function+")"<<endl;
+            saved_answers+=constant+change_function+"("+coefficient+main_function+")";
         }
 
     }
@@ -660,8 +693,11 @@ void trigonmetry_with_coefficient(string input,string change_function,string coe
         {
             simplification_numerator_denominator(constant,coefficient);
             cout<<"("<<constant<<"/"<<coefficient<<")"<<change_function+"("+coefficient+main_function+")"<<endl;
+            saved_answers+="("+constant+"/"+coefficient+")"+change_function+"("+coefficient+main_function+")";
         }
     }
+    all_answers.push_back(saved_answers);
+    saved_answers="";
 }
 /*
 void calculate_trigonmetry_part(string input, string coefficient, string constant)
@@ -922,14 +958,19 @@ void  formula_with_constant(string main_string,string change_function,string con
     if(can_plus>0)
     {
        cout<<"("<<constant_is<<")"<<change_function<<"(("<<b_by_a<<")*"<<main_function<<")"<<endl;
+       saved_answers+="("+constant_is+")"+change_function+"(("+b_by_a+")*"+main_function+")";
     }
     else if(can_minus>0){
             cout<<"("<<constant_is<<")"<<change_function<<"(("<<a_by_b+plus1<<main_function<<")/("<<a_by_b+minus1+main_function<<")"<<endl;
+            saved_answers+="("+constant_is+")"+change_function+"(("+a_by_b+plus1+main_function+")/("+a_by_b+minus1+main_function+")";
     }
     else
     {
          cout<<"("<<constant_is<<")"<<change_function<<"(("<<main_function<<minus1<<a_by_b<<")/("<<a_by_b+plus1+main_function<<")"<<endl;
+          saved_answers+="("+constant_is+")"+change_function+"(("+main_function+minus1+a_by_b+")/("+a_by_b+plus1+main_function+")";
     }
+    all_answers.push_back(saved_answers);
+    saved_answers="";
 }
 
 
@@ -1692,7 +1733,7 @@ parse(string given_expression,int upper,int lower)
              power=power+given_expression[i];
          }
      }
-   cout<<"power: "<<power<<endl;
+  // cout<<"power: "<<power<<endl;
 
 
    // cout<<"3rule"<<endl;
@@ -1736,10 +1777,10 @@ parse(string given_expression,int upper,int lower)
        }
 
        ///checking for x^n
-       if(exist_power==true&&is_trigonmetry==false)
+      /* if(exist_power==true&&is_trigonmetry==false)
        {
           calculate_power_part(given_expression,constant,need_to_divide);
-       }
+       }*/
 
 
        if(system==4)
@@ -1750,12 +1791,11 @@ parse(string given_expression,int upper,int lower)
        {
            extra(given_expression);
        }
-       if(system==1)
-       {
 
-      constant="";
+    if(system==1)
+    {
 
-
+    constant="";
     if(exist_constant==true)
     {
 
@@ -2034,6 +2074,11 @@ parse(string given_expression,int upper,int lower)
          calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient,upper,lower);
 
        }
+       for(int i=0;i<all_answers.size();i++)
+       {
+           cout<<all_answers[i]<<" ";
+       }
+
     }
 }
 
@@ -2052,5 +2097,6 @@ int main()
     cin>>upper>>lower;
     parse(s,upper,lower);
 }
+
 
 
