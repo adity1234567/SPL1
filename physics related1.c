@@ -54,7 +54,7 @@ motion_distance(string equation)
 {
     int upper=0,lower=0;
     cout<<"distance: "<<equation;
-    
+
 }
 motion_velocity(string equation)
 {
@@ -68,8 +68,8 @@ motion_acceleration(string equation)
     int upper=0,lower=0;
     cout<<"velocity to distance: ";
     motion_velocity(equation);
-    
-   
+
+
 }
 
 char about_motion()
@@ -88,6 +88,39 @@ char about_motion()
     //(input=='d')?
      return input;
 
+
+}
+work_force_limit(string equation,int upper,int lower)
+{
+    cout<<"W = F*x"<<endl;
+    parse(equation,upper,lower);
+}
+work_force(string equation)
+{
+    int lower=0,upper=0;
+    cout<<"W = F*x"<<endl;
+    parse(equation,upper,lower);
+}
+
+about_work()
+{
+     printf("\n\n");
+     printf("work --> done by force\n");
+     string dashes(15, '-');
+     char input;
+     cout<<dashes;
+     printf("\n-->relation among work,force and distance\n\n");
+
+}
+
+about_energy()
+{
+     printf("\n\n");
+     printf("energy --> supplying power\n");
+     string dashes(15, '-');
+     char input;
+     cout<<dashes;
+     printf("\n-->relation between energy and power \n\n");
 
 }
 int main()
@@ -125,17 +158,17 @@ int main()
 
     printf("enter your type(in number): ");
     scanf("%d",&type);
+    char ch;
 
-
-    if(type==1) char ch=about_motion();
-
-    cout<<"equation is: "<<ch<<"(t) =";
+    if(type==1)  ch=about_motion();
+    if(type==2) about_work(); ch='w';
+    cout<<"equation is: "<<ch<<"() =";
 
     cin>>equation;
 
-     (ch=='v')? motion_velocity(equation);
+     (ch=='v')? motion_velocity(equation):
      (ch=='a')? motion_accleration(equation):motion_distance(equation);
-    
+
 
 
 }
