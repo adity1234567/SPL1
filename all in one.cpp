@@ -838,7 +838,14 @@ int terms_checking(const string& given_expression, int i=0) {
 
 }
 
+only_variable(string str)
+{
+    string str1;
+    str1=str1+str;
+    str1+="x";
 
+    cout<<str1<<endl;
+}
 parse(string given_expression,int upper,int lower)
 {
 
@@ -912,7 +919,12 @@ parse(string given_expression,int upper,int lower)
     string add_terms="";
     vector<string>terms_string;
 
+    if(count_term==1)
+    {
+        terms_string.push_back(given_expression);
+    }
 
+    else if(count_term>1){
      for(int i=0;i<terms_pos[0];i++)
      {
          add_terms+=given_expression[i];
@@ -931,6 +943,7 @@ parse(string given_expression,int upper,int lower)
 
     add_terms="";
     cout<<"now term is: "<<count_term<<endl;
+
       while(count_term>1){
         for(int i=terms_pos[pos_checker]+1;i<terms_pos[pos_checker+1];i++)
         {
@@ -946,6 +959,7 @@ parse(string given_expression,int upper,int lower)
         add_terms="";
     }
 
+
     add_terms="";
     int last_pos=terms_pos.size()-1;
     for(int i=terms_pos[last_pos]+1;i<check-1;i++)
@@ -960,6 +974,7 @@ parse(string given_expression,int upper,int lower)
         cout<<"before string is: "<<terms_string[i]<<endl;
     }
     cout<<endl;
+    }
     for(int i=0;i<terms_string.size();i++)
     {
         cout<<"string is: "<<terms_string[i]<<endl;
@@ -1060,8 +1075,36 @@ parse(string given_expression,int upper,int lower)
     }
 
 
+        int system=0;
+        string digits,digits_main="";
+        string str=given_expression;
+        copy_if(str.begin(), str.end(),back_inserter(digits), [](char c){
+        return isdigit(static_cast<unsigned char>(c));
+        });
+
+       cout << "Digits in the string: " << digits << endl;
+
+    for(int i=0;i<given_expression.size();i++)
+    {
+        int digits_size=given_expression.size()-2;
+
+
+       if(given_expression[i]=='('||given_expression[i]==')')
+       {
+           digits_main+="";
+       }
+       else
+       {
+           digits_main+=given_expression[i];
+       }
+
+    }
+    if(digits_main==digits)
+    {
+       system=4;
+    }
     ///24/4/2023-->work on every terms count
-    int system=0;
+
     cout<<"x: "<<x<<endl;
     if(two_power==2)
     {
@@ -1075,6 +1118,7 @@ parse(string given_expression,int upper,int lower)
     {
         system=2;
     }
+
 
 
      cout<<"system: "<<system<<endl;
@@ -1232,6 +1276,10 @@ parse(string given_expression,int upper,int lower)
        }
 
 
+       if(system==4)
+       {
+           only_variable(digits);
+       }
        if(system==1)
        {
 
