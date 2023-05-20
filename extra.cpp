@@ -12,6 +12,59 @@ string reverse_string(string s) {
     }
     return p;
 }
+string convert_int_to_string(long long int int_to_convert)
+{
+    string new_string,temp_string;
+    int negative=0,last_digit=1;
+
+    if(int_to_convert<0)
+    {
+        negative=1;
+        int_to_convert=-int_to_convert;
+    }
+    while(int_to_convert>0)
+    {
+        last_digit=int_to_convert%10;
+         temp_string+=(char)(last_digit+'0');
+        int_to_convert=int_to_convert/10;
+    }
+    int temp_str_length=temp_string.size();
+    if(negative)
+    {
+        new_string+="-";
+    }
+    for(int i=temp_str_length-1;i>=0;i--)
+    {
+        new_string+=temp_string[i];
+    }
+
+    return new_string;
+
+}
+long long int convert_string_to_int(string string_to_convert)
+{
+    long long int converted_int=0,str_len=string_to_convert.size();
+    long long int char_index=0,negative=0;
+
+    if(string_to_convert[0]=='-')
+    {
+        char_index=1;
+        negative=1;
+    }
+
+    for(int i=char_index;i<str_len;i++)
+    {
+        converted_int*=10;
+        converted_int=(long long int)(string_to_convert[i]-'0');
+    }
+    if(negative)
+    {
+        converted_int=-converted_int;
+    }
+    return converted_int;
+}
+
+
 
 void extra(string given_expression)
  {
@@ -44,7 +97,7 @@ void extra(string given_expression)
             {
                 multi_pos.push_back(i);
             }
-            i++; // Increment i here
+            i++;
         }
     }
 
@@ -110,32 +163,40 @@ void extra(string given_expression)
 
     cout << "nicher_extra_constant: " << nicher_extra_constant << endl;
 
-    int nicher_constant_int=0,upor_extra_constant_int=0,square_nicher_constant=0,new_extra_constant=0,uporw_constant_int;
-    int extra_constant=0;
+    int nicher_constant_int=0,upor_extra_constant_int=0,nicher_extra_constant_int,square_nicher_constant=0,new_extra_constant=0,upor_constant_int;
+    int extra_constant_int=0,new_extra_constant1,new_extra_constant2;
+    string extra_constant;
+
      nicher_constant_int=convert_string_to_int(nicher_constant);
+     cout<<"nicher_constant_int: "<<nicher_constant_int<<endl;
      upor_extra_constant_int=convert_string_to_int(upor_extra_constant);
+     upor_constant_int=convert_string_to_int(upor_constant);
      nicher_extra_constant_int=convert_string_to_int(nicher_extra_constant);
-     square_nicher_constant=square(nicher_constant_int);
+     square_nicher_constant=nicher_constant_int*nicher_constant_int;
      new_extra_constant1=nicher_constant_int*upor_extra_constant_int;
      new_extra_constant2=nicher_extra_constant_int*upor_constant_int;
 
+     cout<<"new_extra_constant1 &constant2: "<<new_extra_constant1<<" "<<new_extra_constant2<<endl;
      if(signs.size()==1)
      {
          extra_constant_int=abs(new_extra_constant1-new_extra_constant2);
+         cout<<"extra_constant_int: "<<extra_constant_int<<endl;
          extra_constant=convert_int_to_string(extra_constant_int);
+         cout<<"extra_constant: "<<extra_constant<<endl;
          if(new_extra_constant1>new_extra_constant2)
          {
-             cout<<upor_extra_constant_sign<<extra_constant<<endl;
+             cout<<"extra_constant: "<<upor_extra_constant_sign<<extra_constant<<endl;
          }
          else
          {
-              cout<<nicher_extra_constant_sign<<extra_constant<<endl;
+              cout<<"extra_constant: "<<nicher_extra_constant_sign<<extra_constant<<endl;
          }
      }
      else
      {
         extra_constant=abs(new_extra_constant1+new_extra_constant2);
      }
+     cout<<"extra_constant: "<<extra_constant<<endl;
 
 }
 
