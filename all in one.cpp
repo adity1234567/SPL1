@@ -1346,6 +1346,7 @@ parse(string given_expression,int upper,int lower)
 
     stack<char>signs_of_expression;
     vector<int>terms_pos;
+    vector<char>signs_are;
 
     ///(1/(2^2+(3*x)^2))+(3*x^2)+(x)
 
@@ -1359,6 +1360,7 @@ parse(string given_expression,int upper,int lower)
                 if (signs_of_expression.empty())
                 {
                     terms_pos.push_back(check);
+                    signs_are.push_back('+');
                     arr_terms_pos[another_check]=check;
 
                     count_term++;
@@ -1370,6 +1372,7 @@ parse(string given_expression,int upper,int lower)
                 if (signs_of_expression.empty())
                 {
                     terms_pos.push_back(check);
+                     signs_are.push_back('-');
                     arr_terms_pos[another_check]=check;
 
                     another_check++;
@@ -2074,9 +2077,28 @@ parse(string given_expression,int upper,int lower)
          calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient,upper,lower);
 
        }
+
+       cout<<endl;
+       cout<<endl;
+       cout<<"The output is: "<<endl;
+       string dashes(15, '-');
+       cout<<dashes;
+       cout<<endl;
+
+       if(count_term+1==all_answers.size()){
+       int l=0;
        for(int i=0;i<all_answers.size();i++)
        {
-           cout<<all_answers[i]<<" ";
+           if(i==all_answers.size()-1)
+           {
+              cout<<all_answers[i]<<"+c";
+           }
+           else
+           {
+               cout<<all_answers[i]<<signs_are[l];
+           }
+           l++;
+       }
        }
 
     }
@@ -2090,8 +2112,8 @@ parse(string given_expression,int upper,int lower)
 int main()
 {
     string s;
+    printf("Enter the equation: ");
     cin>>s;
-
     int upper,lower;
     printf("input upper and lower limit: ");
     cin>>upper>>lower;
