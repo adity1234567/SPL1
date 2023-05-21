@@ -1324,7 +1324,7 @@ trigonmetry_diff_coefficient(string equation)
     }
 
 }
-parse(string given_expression,int upper,int lower)
+string parse(string given_expression,int upper,int lower)
 {
 
 
@@ -1345,6 +1345,7 @@ parse(string given_expression,int upper,int lower)
     memset(arr_terms_pos,0,sizeof(arr_terms_pos));
 
     stack<char>signs_of_expression;
+    string main_output="";
     vector<int>terms_pos;
     vector<char>signs_are;
 
@@ -2080,10 +2081,7 @@ parse(string given_expression,int upper,int lower)
 
        cout<<endl;
        cout<<endl;
-       cout<<"The output is: "<<endl;
-       string dashes(15, '-');
-       cout<<dashes;
-       cout<<endl;
+
 
        if(count_term+1==all_answers.size()){
        int l=0;
@@ -2091,34 +2089,223 @@ parse(string given_expression,int upper,int lower)
        {
            if(i==all_answers.size()-1)
            {
-              cout<<all_answers[i]<<"+c";
+             // cout<<all_answers[i]<<"+c";
+              main_output+=all_answers[i]+"+c";
            }
            else
            {
-               cout<<all_answers[i]<<signs_are[l];
+               //cout<<all_answers[i]<<signs_are[l];
+               main_output+=all_answers[i]+signs_are[l];
            }
            l++;
        }
        }
 
+      // cout<<main_output<<endl;
+    }
+       cout<<"The output is: "<<endl;
+       string dashes(15, '-');
+       cout<<dashes;
+       cout<<endl;
+       cout<<main_output<<endl;
+
+       return main_output;
+}
+
+
+limit(string postfix,int lower,int upper)
+{
+    for(int i=0;i<postfix.size();i++)
+    {
+
     }
 }
 
 
+void replaceVariable(char *equation, const char *oldVar, const char *newVar) {
+    char *pos = strstr(equation, oldVar);
+    size_t oldLen = strlen(oldVar);
+    size_t newLen = strlen(newVar);
+    size_t equationLen = strlen(equation);
+    size_t offset = 0;
+
+    while (pos != NULL) {
+        size_t newPos = pos - equation + offset;
+
+        memmove(equation + newPos + newLen, equation + newPos + oldLen, equationLen - newPos - oldLen + 1);
+        memcpy(equation + newPos, newVar, newLen);
+
+        offset += newLen - oldLen;
+        pos = strstr(equation + newPos + newLen, oldVar);
+    }
+}
+motion_distance(string equation)
+{
+    int upper=0,lower=0;
+    cout<<"distance: "<<equation;
+
+}
+motion_velocity(string equation)
+{
+    int upper=0,lower=0;
+    cout<<"velocity to distance: ";
+    parse(equation,upper,lower);
+}
+
+motion_acceleration(string equation)
+{
+    int upper=0,lower=0;
+    cout<<"velocity to distance: ";
+    motion_velocity(equation);
 
 
+}
+
+char about_motion()
+{
+     printf("\n\n");
+     printf("motion\n");
+     string dashes(7, '-');
+     char input;
+     cout<<dashes;
+     printf("\n-->relation between velocity and acceleration\n-->relation between distance(d) and acceleration(a)\n-->relation between distance and velocity\n");
+     printf("\n\n");
+
+     cout<<"the equation want to input is about:\n--> distance(d),velocity(v) or acceleration(a)?:  ";
+     cin>>input;
+
+    //(input=='d')?
+     return input;
 
 
+}
+work_force_limit(string equation,int upper,int lower)
+{
+    cout<<"W = F*x"<<endl;
+    parse(equation,upper,lower);
+}
+work_force(string equation)
+{
+    int lower=0,upper=0;
+    cout<<"W = F*x"<<endl;
+    parse(equation,upper,lower);
+}
+
+about_work()
+{
+     printf("\n\n");
+     printf("work --> done by force\n");
+     string dashes(15, '-');
+     char input;
+     cout<<dashes;
+     printf("\n-->relation among work,force and distance\n\n");
+
+}
+
+about_energy()
+{
+     printf("\n\n");
+     printf("energy --> supplying power\n");
+     string dashes(15, '-');
+     char input;
+     cout<<dashes;
+     printf("\n-->relation between energy and power \n\n");
+
+}
 int main()
 {
-    string s;
+   /* string s;
     printf("Enter the equation: ");
     cin>>s;
     int upper,lower;
     printf("input upper and lower limit: ");
     cin>>upper>>lower;
     parse(s,upper,lower);
+    string s1=parse(s,upper,lower);
+    limit(s1,lower,upper);
+    */
+     int type=0;
+
+    printf("what to want to do?\n");
+    string dashes(20, '-'),equation;
+    cout<<dashes;
+    printf("\n-->motion\n-->force\n-->work\n-->energy\n\n\n");
+
+    printf("enter your type(in number): ");
+    scanf("%d",&type);
+    char ch;
+
+    if(type==1)  ch=about_motion();
+    if(type==2)
+    {
+        about_work(); ch='w';
+    }
+    if(type==3) about_energy();
+    cout<<"equation is: "<<ch<<"() =";
+
+    cin>>equation;
+
+     (ch=='v')? motion_velocity(equation):
+     (ch=='a')? motion_acceleration(equation):motion_distance(equation);
+
+
+
 }
 
+/*
+#include <iostream>
+#include <string>
+#include <sstream>
 
+struct Term {
+    double coefficient;
+    double exponent;
+    std::string variable;
+};
+
+// Function to parse a term and extract the coefficient, exponent, and variable
+Term parseTerm(const std::string& term) {
+    Term parsedTerm;
+
+    // Find the position of the multiplication symbol and the caret symbol
+    size_t multiplicationPos = term.find('*');
+    size_t caretPos = term.find('^');
+
+    // Extract the coefficient substring
+    std::string coefficientStr = term.substr(1, multiplicationPos - 1);
+    std::istringstream coefficientStream(coefficientStr);
+    coefficientStream >> parsedTerm.coefficient;
+
+    // Extract the exponent substring
+    std::string exponentStr = term.substr(caretPos + 1);
+    std::istringstream exponentStream(exponentStr);
+    exponentStream >> parsedTerm.exponent;
+
+    // Extract the variable name
+    parsedTerm.variable = term.substr(multiplicationPos + 1, caretPos - multiplicationPos - 1);
+
+    return parsedTerm;
+}
+
+int main() {
+    std::string expression = "(x)+((2/3)*x^35)";
+
+    // Find the position of the opening parenthesis and the closing parenthesis
+    size_t openingParenthesisPos = expression.find('(');
+    size_t closingParenthesisPos = expression.find(')');
+
+    // Extract the term substring
+    std::string termStr = expression.substr(openingParenthesisPos + 1, closingParenthesisPos - openingParenthesisPos - 1);
+
+    // Parse the term
+    Term parsedTerm = parseTerm(termStr);
+
+    // Output the parsed values
+    std::cout << "Coefficient: " << parsedTerm.coefficient << std::endl;
+    std::cout << "Exponent: " << parsedTerm.exponent << std::endl;
+    std::cout << "Variable: " << parsedTerm.variable << std::endl;
+
+    return 0;
+}
+*/
 
