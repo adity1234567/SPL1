@@ -4,6 +4,9 @@ using namespace std;
 vector<int>loop;
 string saved_answers="";
 vector<string>all_answers;
+double limit_answers_double=1.00000;
+vector<int>all_answers_limit;
+
 void function_for(int i,int n)
 {
 
@@ -77,6 +80,25 @@ string reverse_string(string s)
     return p;
 }
 
+double string_to_double(const string& s) {
+    size_t delimiterPos = s.find('/');
+
+    if (delimiterPos != string::npos) {
+        string numeratorStr = s.substr(0, delimiterPos);
+        string denominatorStr = s.substr(delimiterPos + 1);
+
+        double numerator, denominator;
+        istringstream(numeratorStr) >> numerator;
+        istringstream(denominatorStr) >> denominator;
+
+        if (denominator != 0.0) {
+            return numerator / denominator;
+        }
+    }
+
+
+    return 0.0;
+}
 
 string convert_int_to_string(long long int int_to_convert)
 {
@@ -105,12 +127,6 @@ string convert_int_to_string(long long int int_to_convert)
     }
 
     return new_string;
-
-
-
-
-
-
 }
 
 
@@ -186,9 +202,8 @@ string constant_with_coefficient(string constant_list,int size_constant_list,str
 
 
 
-void power_and_constant(string power,string constant)
+void power_and_constant(string power,string constant,int upper,int lower)
 {
-
 
    set<char>power_check;
    int store=0;
@@ -202,8 +217,6 @@ void power_and_constant(string power,string constant)
         }
    }
    string numerator_power="",denominator_power="";
-
-
    int numerator_two_int=0,denominator_two_int=0;
    if (power_check.find('/')!= power_check.end())
    {
@@ -238,7 +251,6 @@ void power_and_constant(string power,string constant)
           break;
         }
    }
-
 
      string main_function="x";
      string power1="^";
@@ -278,18 +290,25 @@ void power_and_constant(string power,string constant)
     {
         cout<<"("<< simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(denominator_constant_int*numerator_two_int))<<")";
         saved_answers="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(denominator_constant_int*numerator_two_int))+")";
+
+         limit_answers_double=(double)(numerator_constant_int/(denominator_constant_int*numerator_two_int));
+         limit_answers_double*=(upper-lower);
     }
     else
     {
+        //cout<<"remain"<<endl;
         cout<<"(1/"<<numerator_two_int<<")";
         cout<<main_function<<power1<<numerator_two_int<<endl;
         saved_answers= "(1/"+convert_int_to_string(numerator_two_int)+")"+main_function+power1+convert_int_to_string(numerator_two_int);
+        ///remain
+         limit_answers_double=0.5*(square(upper)-square(lower));
     }
    }
    else
    {
    if(denominator_two_int*denominator_constant_int!=1)
    {
+       cout<<"remain"<<endl;
        cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_two_int),convert_int_to_string(numerator_constant_int))<<"/"<<simplification_numerator_denominator(convert_int_to_string(numerator_two_int),convert_int_to_string(numerator_constant_int))<<")*";
 
        cout<<main_function<<power1<<"("<<numerator_two_int<<"/"<<denominator_two_int<<")"<<endl;
@@ -298,18 +317,28 @@ void power_and_constant(string power,string constant)
        saved_answers+=main_function+power1+"("+convert_int_to_string(numerator_two_int)+"/"+convert_int_to_string(denominator_two_int)+")";
 
 
+      // limit_answers_double=pow(upper,convert_string_to_int(power))-pow(lower,convert_string_to_int(power));
+       // limit_answers_double*=(double)((numerator_two_int*denominator_constant_int)/(numerator_constant_int*denominator_two_int));
+
    }
    else
    {
+       cout<<"remain2"<<endl;
        cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))<<")";
 
-       cout<<main_function<<power1<<numerator_two_int<<endl;
+      // cout<<main_function<<power1<<numerator_two_int<<endl;
        saved_answers+="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))+")"+main_function+power1+convert_int_to_string(numerator_two_int);
+       limit_answers_double=pow(upper,numerator_two_int)-pow(lower,numerator_two_int);
+      limit_answers_double=(double)((limit_answers_double*numerator_constant_int)/numerator_two_int);
+      cout<<"limit2: "<<limit_answers_double<<endl;
    }
    }
 
    all_answers.push_back(saved_answers);
+    all_answers_limit.push_back(limit_answers_double);
    saved_answers="";
+   limit_answers_double=1.0000;
+
 }
 
 double sin_function(double bound) {
@@ -398,7 +427,7 @@ double work_for_trigonmetry(string input, double bound) {
 }
 
 
-void calculate_power_part(string s,string constant,bool can_divide)
+void calculate_power_part(string s,string constant,bool can_divide,int upper,int lower)
 {
     int power_part=0;
     int power=0,bracket=0;
@@ -442,20 +471,18 @@ void calculate_power_part(string s,string constant,bool can_divide)
 
     ///modify this-->5/5
 
-    //cout<<"power: "<<power_one<<" constant: "<<constant<<endl;
-   // power_one++;
     if(can_divide==false&&power_one!="")
     {
-         power_and_constant(power_one+"/1",constant+"/1");
+         power_and_constant(power_one+"/1",constant+"/1",upper,lower);
     }
     else if(power>0&&power_one!="")
     {
-        power_and_constant(power_one+"/1",constant);
+        power_and_constant(power_one+"/1",constant,upper,lower);
     }
     else if(power_one=="")
     {
        // cout<<"power """<<endl;
-        power_and_constant("",constant);
+        power_and_constant("",constant,upper,lower);
     }
 
 }
@@ -626,6 +653,8 @@ void extra(string given_expression)
     cout<<"("<<upor_constant+"/"+convert_int_to_string(square_nicher_constant)+")+("+extra_constant+"/"+convert_int_to_string(square_nicher_constant)+")ln"+expression1<<endl;
 
     saved_answers+="("+upor_constant+"/"+convert_int_to_string(square_nicher_constant)+")+("+extra_constant+"/"+convert_int_to_string(square_nicher_constant)+")ln"+expression1;
+    //limit_answers_double=
+    ///remain
 
     all_answers.push_back(saved_answers);
     saved_answers="";
@@ -638,30 +667,7 @@ void trigonmetry_with_coefficient(string input,string change_function,string coe
     //coefficient(input,change_function,coefficient);
 
      string main_function="x";
-    /*int coefficient_pos_open=0;
-     int coefficient_pos_close=0;
-     string coefficient="";
-    for(int i=0;i<input.size();i++)
-    {
-        if(input[i]=='(')
-        {
-            coefficient_pos_open=i;
-        }
-        if(input[i]=='x'&&input[i+1]==')')
-        {
-             coefficient_pos_close=i;
-        }
-    }
-    for(int i=coefficient_pos_open+1;i<coefficient_pos_close;i++)
-    {
-        coefficient+=input[i];
-    }
 
-    cout<<coefficient<<endl;*/
-
-     //coefficient(input,change_function,coefficient);
-
-    // cout<<"constant: "<<constant<<" coefficient: "<<coefficient<<endl;
     if(constant!="1")
     {
         if(coefficient!="")
@@ -677,13 +683,9 @@ void trigonmetry_with_coefficient(string input,string change_function,string coe
            cout<<constant<<change_function+"("+coefficient+main_function+")"<<endl;
             saved_answers+=constant+change_function+"("+coefficient+main_function+")";
         }
-
     }
-
     else
     {
-       // constant=1;
-        // cout<<"2nd"<<endl;
         if(coefficient=="")
         {
             cout<<"2nd 1"<<endl;
@@ -699,64 +701,8 @@ void trigonmetry_with_coefficient(string input,string change_function,string coe
     all_answers.push_back(saved_answers);
     saved_answers="";
 }
-/*
-void calculate_trigonmetry_part(string input, string coefficient, string constant)
-{
-    vector<char> check_function;
-    int can_function = 0;
-    int pos_function = 0;
-
-   // cout << input << endl;
-    bool a_power = false;
-    for (int i = 0; i < input.size(); i++)
-    {
-        if (input[i] >= 'a' && input[i] <= 'z')
-        {
-            check_function.push_back(input[i]);
-            pos_function = i;
-
-            if (input[i] != 'x' && input[i + 1] == '^' && input[i + 2] == '2')
-            {
-                a_power = true;
-            }
-        }
-    }
-
-    string function_is = "";
-   /* for (auto i : check_function)
-    {
-        cout << i << " ";
-    }
-    cout << endl;*/
-   /* for (int i = 0; i < check_function.size(); i++)
-    {
-        function_is += check_function[i];
-    }
-
-    function_is = (check_function.size() != 1) ?
-        ((function_is == "tansec" || function_is == "sectan") ? "tanxsecx" :
-        ((function_is == "coseccot" || function_is == "cotcosec") ? "cotxcosecx" :
-        ((a_power == true) ? ((function_is == "sec") ? "sec^2x" : "cosec^2x") : (function_is + 'x')))) :
-        "x";
-    cout << function_is << endl;
-
-    string change_function = "";
-    change_function += (function_is == "sinx") * "cos";
-    change_function += (function_is == "cosx") * "(-1)*sin";
-    change_function += (function_is == "secx") * "tan";
-    change_function += (function_is == "cosecx") * "cot";
-    change_function += (function_is == "cotxcosecx") * "(-1)*cosec";
-    change_function += (function_is == "tanxsecx") * "sec";
-    change_function += (function_is == "e") * "e";
-    change_function += (function_is == "sec^2x") * "tan";
-    change_function += (function_is == "cosec^2x") * "(-1)*cot";
-    cout << "change function: " << change_function << endl;
-
-    trigonmetry_with_coefficient(input, change_function, coefficient, constant);
-}
 
 
-*/
 void calculate_trigonmetry_part(string input,string coefficient,string constant,int upper,int lower)
 {
     vector<char>check_function;
@@ -876,14 +822,14 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant,
          change_function+="ln(sec";
     }
 
-    cout<<"change function:\ "<<change_function<<endl;
+    cout<<"change function: "<<change_function<<endl;
 
     ///within limit
     ///-------------------------------------------------------------------------
     double upper_num=0.0000000,lower_num=0.000000000;
            cout<<"trigon"<<endl;
-            double modified_upper=(upper*180)/3.1416;
-            double modified_lower=(lower*180)/3.1416;
+            double modified_upper=upper;
+            double modified_lower=lower;
             upper_num=work_for_trigonmetry(change_function,modified_upper);
            lower_num=work_for_trigonmetry(change_function,modified_lower);
            cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
@@ -963,14 +909,28 @@ void  formula_with_constant(string main_string,string change_function,string con
     else if(can_minus>0){
             cout<<"("<<constant_is<<")"<<change_function<<"(("<<a_by_b+plus1<<main_function<<")/("<<a_by_b+minus1+main_function<<")"<<endl;
             saved_answers+="("+constant_is+")"+change_function+"(("+a_by_b+plus1+main_function+")/("+a_by_b+minus1+main_function+")";
+            double upper1=(string_to_double(a_by_b)+upper)/(string_to_double(a_by_b)-upper);
+            double upper2=work_for_trigonmetry(change_function,upper1);
+            double lower1=(string_to_double(a_by_b)+lower)/(string_to_double(a_by_b)-lower);
+            double lower2=work_for_trigonmetry(change_function,lower1);
+            limit_answers_double=upper2-lower2;
+            limit_answers_double*=string_to_double(constant_is);
     }
     else
     {
          cout<<"("<<constant_is<<")"<<change_function<<"(("<<main_function<<minus1<<a_by_b<<")/("<<a_by_b+plus1+main_function<<")"<<endl;
           saved_answers+="("+constant_is+")"+change_function+"(("+main_function+minus1+a_by_b+")/("+a_by_b+plus1+main_function+")";
+            double upper1=(upper-string_to_double(a_by_b))/(string_to_double(a_by_b)+upper);
+            double upper2=work_for_trigonmetry(change_function,upper1);
+            double lower1=(string_to_double(a_by_b)+lower)/(string_to_double(a_by_b)-lower);
+            double lower2=work_for_trigonmetry(change_function,lower1);
+            limit_answers_double=upper2-lower2;
+            limit_answers_double*=string_to_double(constant_is);
     }
     all_answers.push_back(saved_answers);
+    all_answers_limit.push_back(limit_answers_double);
     saved_answers="";
+    limit_answers_double=1.0000;
 }
 
 
@@ -1053,13 +1013,19 @@ int terms_checking(const string& given_expression, int i=0) {
 
 }
 
-only_variable(string str)
+only_variable(string str,int upper,int lower)
 {
     string str1;
+    limit_answers_double=(upper-lower)*convert_string_to_int(str);
     str1=str1+str;
-    str1+="x";
+    str1+="*x";
 
-    cout<<str1<<endl;
+   // cout<<str1<<" only variable "<<limit_answers_double<<endl;
+    saved_answers+=str1;
+    all_answers.push_back(saved_answers);
+    all_answers_limit.push_back(limit_answers_double);
+    saved_answers="";
+    limit_answers_double=0.0000;
 }
 
 
@@ -1324,7 +1290,7 @@ trigonmetry_diff_coefficient(string equation)
     }
 
 }
-string parse(string given_expression,int upper,int lower)
+string parse(string& given_expression,int upper,int lower)
 {
 
 
@@ -1424,18 +1390,17 @@ string parse(string given_expression,int upper,int lower)
 
 
     add_terms="";
-    cout<<"now term is: "<<count_term<<endl;
+  //  cout<<"now term is: "<<count_term<<endl;
 
       while(count_term>1){
         for(int i=terms_pos[pos_checker]+1;i<terms_pos[pos_checker+1];i++)
         {
            add_terms+=given_expression[i];
-
-           cout<<add_terms<<endl;
+           //cout<<add_terms<<endl;
         }
          pos_checker++;
 
-         cout<<add_terms<<" "<<pos_checker<<endl;
+       //  cout<<add_terms<<" "<<pos_checker<<endl;
         terms_string.push_back(add_terms);
         count_term--;
         add_terms="";
@@ -1450,7 +1415,7 @@ string parse(string given_expression,int upper,int lower)
     }
     terms_string.push_back(add_terms);
 
-    cout<<"terms_string.size()"<<terms_string.size()<<endl;
+  //  cout<<"terms_string.size()"<<terms_string.size()<<endl;
      for(int i=0;i<terms_string.size();i++)
     {
         cout<<"before string is: "<<terms_string[i]<<endl;
@@ -1550,12 +1515,7 @@ string parse(string given_expression,int upper,int lower)
             pos_of_x.push_back(i);
             only_x=true;
         }
-
-
-
-
     }
-
 
         int system=0;
         string digits,digits_main="";
@@ -1595,7 +1555,7 @@ string parse(string given_expression,int upper,int lower)
     coefficient1=coefficients[0];
     coefficient2=coefficients[1];
 
-    cout<<"coefficient1 and 2: "<<coefficient1<<" "<<coefficient2<<endl;
+   // cout<<"coefficient1 and 2: "<<coefficient1<<" "<<coefficient2<<endl;
     }
     if(coefficient1!=coefficient2)
     {
@@ -1607,7 +1567,7 @@ string parse(string given_expression,int upper,int lower)
     }
     ///24/4/2023-->work on every terms count
 
-    cout<<"x: "<<x<<endl;
+    //cout<<"x: "<<x<<endl;
     if(two_power==2)
     {
         system=3;
@@ -1697,8 +1657,6 @@ string parse(string given_expression,int upper,int lower)
     // loop.clear();
    // cout<<"constant: "<<constant<<endl;
 
-
-
    int openBracketPlace=0,closeBracketPlace=0;
    for(int i=0;i<=firstBrackets.size();i++)
    {
@@ -1720,13 +1678,8 @@ string parse(string given_expression,int upper,int lower)
        {
           constant+=given_expression[i];
        }
-
-
-
     // cout<<"constant: "<<constant<<endl;
    }
-
-
 
      ///power
      power="";
@@ -1737,13 +1690,6 @@ string parse(string given_expression,int upper,int lower)
              power=power+given_expression[i];
          }
      }
-  // cout<<"power: "<<power<<endl;
-
-
-   // cout<<"3rule"<<endl;
-
-   // cout<<constant_co<<" "<<coefficient_co<<endl;
-   //   cout<<constant_with_coefficient(constant_co,size_of_constant,coefficient_co,size_of_coefficient,need_to_divide);
 
        string numerator_one="",denominator_one="";
        string numerator_two="",denominator_two="";
@@ -1789,7 +1735,7 @@ string parse(string given_expression,int upper,int lower)
 
        if(system==4)
        {
-           only_variable(digits);
+           only_variable(digits,upper,lower);
        }
        if(system==5)
        {
@@ -1798,13 +1744,11 @@ string parse(string given_expression,int upper,int lower)
 
     if(system==1)
     {
-
     constant="";
     if(exist_constant==true)
     {
-
          size_t pos = given_expression.find('*');
-        cout << "The first position of '*' is: " << pos <<endl;
+        //cout << "The first position of '*' is: " << pos <<endl;
         loop.clear();
         function_for(1,pos);
         for(auto i:loop)
@@ -1818,13 +1762,9 @@ string parse(string given_expression,int upper,int lower)
         constant="1";
     }
 
-   // cout<<endl;
-
-    // loop.clear();
     cout<<"constant: "<<constant<<endl;
          // deal_with_only_x(power,main_term,constant);
-          calculate_power_part(given_expression,constant,need_to_divide);
-
+          calculate_power_part(given_expression,constant,need_to_divide,upper,lower);
        }
        /**
            (5*sin(4x))
@@ -2077,13 +2017,20 @@ string parse(string given_expression,int upper,int lower)
 
          calcute_formulas(given_expression,pos_of_constant,pos_of_x,is_plus, is_minus,constant,coefficient,is_coefficient,upper,lower);
 
+          secondBrackets.clear(),firstBrackets.clear();
+         //  pos_of_x.clear();
+
+         //  coefficients.clear();
+         //  waiting_x.clear();
+           saving_square_pos.clear();
        }
 
        cout<<endl;
        cout<<endl;
 
-
-       if(count_term+1==all_answers.size()){
+      // cout<<main_output<<endl;
+    }
+    //if(count_term==all_answers.size()-1){
        int l=0;
        for(int i=0;i<all_answers.size();i++)
        {
@@ -2099,16 +2046,44 @@ string parse(string given_expression,int upper,int lower)
            }
            l++;
        }
+     //  }
+      double main_output_within_limit=0.000000000;
+        for(int i=0;i<all_answers_limit.size();i++)
+       {
+           if(i==0) main_output_within_limit+=all_answers_limit[i];
+           else
+           {
+               if(signs_are[i-1]=='+')
+               {
+                    main_output_within_limit+=all_answers_limit[i];
+               }
+               else if(signs_are[i-1]=='-')
+               {
+                   main_output_within_limit-=all_answers_limit[i];
+               }
+           }
        }
 
-      // cout<<main_output<<endl;
-    }
-       cout<<"The output is: "<<endl;
-       string dashes(15, '-');
+       cout<<"main_output_within_limit: "<<endl;
+       string dashes(30, '-');
        cout<<dashes;
+       cout<<endl;
+       cout<<main_output_within_limit<<endl;
+       cout<<endl;
+       cout<<"The output is: "<<endl;
+       string dashes1(15, '-');
+       cout<<dashes1;
        cout<<endl;
        cout<<main_output<<endl;
 
+       terms_pos.clear(),signs_are.clear();
+       terms_string.clear();
+       //constant_list.clear(),coefficient_list
+       //secondBrackets.clear(),firstBrackets.clear();
+       //pos_of_x.clear();
+       all_answers.clear();
+       all_answers_limit.clear();
+       //limit_answers.clear();
        return main_output;
 }
 
@@ -2214,7 +2189,38 @@ about_energy()
 }
 int main()
 {
-   /* string s;
+    string s;
+    int upper,lower;
+    cout<<endl;
+    cout<<endl;
+    string spaces(42, ' '),equation;
+    cout<<spaces;
+    cout<<"INTEGRATION ANALYZER"<<endl;
+    string spaces1(30, ' '),dashes(45, '-');;
+    cout<<spaces1;
+    cout<<dashes;
+
+    printf("\n\n");
+    printf("WANT TO SOLVE SOME INTEGRAL PROBLEMS OR PHYSICS PROBLEMS OR WANT TO PRACTICE ?\n");
+    string dashes1(90, '-');
+    int type;
+    cout<<dashes1;
+    printf("\n");
+    printf("Type 01: Ingeral problems\nType 02: Physics problems\nType 03: Practice\n\nEnter type: ");
+    cin>>type;
+    if(type==1)
+    {
+      printf("Enter the equation: ");
+      cin>>s;
+      printf("input upper and lower limit: ");
+      cin>>upper>>lower;
+      //parse(s,upper,lower);
+      string s1=parse(s,upper,lower);
+     // cout<<"s1: "<<s1<<endl;
+      parse(s1,lower,upper);
+    }
+    /*
+    string s;
     printf("Enter the equation: ");
     cin>>s;
     int upper,lower;
@@ -2224,7 +2230,8 @@ int main()
     string s1=parse(s,upper,lower);
     limit(s1,lower,upper);
     */
-     int type=0;
+    if(type==2){
+     int type1=0;
 
     printf("what to want to do?\n");
     string dashes(20, '-'),equation;
@@ -2235,12 +2242,12 @@ int main()
     scanf("%d",&type);
     char ch;
 
-    if(type==1)  ch=about_motion();
-    if(type==2)
+    if(type1==1)  ch=about_motion();
+    if(type1==2)
     {
         about_work(); ch='w';
     }
-    if(type==3) about_energy();
+    if(type1==3) about_energy();
     cout<<"equation is: "<<ch<<"() =";
 
     cin>>equation;
@@ -2248,64 +2255,7 @@ int main()
      (ch=='v')? motion_velocity(equation):
      (ch=='a')? motion_acceleration(equation):motion_distance(equation);
 
-
+    }
 
 }
-
-/*
-#include <iostream>
-#include <string>
-#include <sstream>
-
-struct Term {
-    double coefficient;
-    double exponent;
-    std::string variable;
-};
-
-// Function to parse a term and extract the coefficient, exponent, and variable
-Term parseTerm(const std::string& term) {
-    Term parsedTerm;
-
-    // Find the position of the multiplication symbol and the caret symbol
-    size_t multiplicationPos = term.find('*');
-    size_t caretPos = term.find('^');
-
-    // Extract the coefficient substring
-    std::string coefficientStr = term.substr(1, multiplicationPos - 1);
-    std::istringstream coefficientStream(coefficientStr);
-    coefficientStream >> parsedTerm.coefficient;
-
-    // Extract the exponent substring
-    std::string exponentStr = term.substr(caretPos + 1);
-    std::istringstream exponentStream(exponentStr);
-    exponentStream >> parsedTerm.exponent;
-
-    // Extract the variable name
-    parsedTerm.variable = term.substr(multiplicationPos + 1, caretPos - multiplicationPos - 1);
-
-    return parsedTerm;
-}
-
-int main() {
-    std::string expression = "(x)+((2/3)*x^35)";
-
-    // Find the position of the opening parenthesis and the closing parenthesis
-    size_t openingParenthesisPos = expression.find('(');
-    size_t closingParenthesisPos = expression.find(')');
-
-    // Extract the term substring
-    std::string termStr = expression.substr(openingParenthesisPos + 1, closingParenthesisPos - openingParenthesisPos - 1);
-
-    // Parse the term
-    Term parsedTerm = parseTerm(termStr);
-
-    // Output the parsed values
-    std::cout << "Coefficient: " << parsedTerm.coefficient << std::endl;
-    std::cout << "Exponent: " << parsedTerm.exponent << std::endl;
-    std::cout << "Variable: " << parsedTerm.variable << std::endl;
-
-    return 0;
-}
-*/
 
