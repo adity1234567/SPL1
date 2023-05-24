@@ -5,7 +5,7 @@ vector<int>loop;
 string saved_answers="";
 vector<string>all_answers;
 double limit_answers_double=1.00000;
-vector<double>all_answers_limit;
+vector<int>all_answers_limit;
 
 void function_for(int i,int n)
 {
@@ -305,9 +305,9 @@ void power_and_constant(string power,string constant,int upper,int lower)
     else
     {
         //cout<<"remain"<<endl;
-        cout<<"(1/"<<numerator_two_int<<")*";
-        cout<<main_function<<power1<<numerator_two_int<<endl;
-        saved_answers= "(1/"+convert_int_to_string(numerator_two_int)+")*"+main_function+power1+convert_int_to_string(numerator_two_int);
+        cout<<"(1/"<<numerator_two_int<<")*x^";
+        cout<<numerator_two_int<<endl;
+        saved_answers= "(1/"+convert_int_to_string(numerator_two_int)+")*x^"+convert_int_to_string(numerator_two_int);
         ///remain
          limit_answers_double=0.5*(square(upper)-square(lower));
     }
@@ -318,11 +318,10 @@ void power_and_constant(string power,string constant,int upper,int lower)
    {
        cout<<"remain"<<endl;
        int new1=numerator_two_int*denominator_constant_int;
-       cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(new1))<<")*";
-       cout<<main_function<<power1<<numerator_two_int<<endl;
+       cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(new1))<<")*x^";
+       cout<<numerator_two_int<<endl;
 
-       saved_answers="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(new1))+")*";
-       main_function+power1+convert_int_to_string(numerator_two_int);
+       saved_answers="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(new1))+")*x^"+convert_int_to_string(numerator_two_int);
 
 
        limit_answers_double=pow(upper,convert_string_to_int(power))-pow(lower,convert_string_to_int(power));
@@ -335,14 +334,16 @@ void power_and_constant(string power,string constant,int upper,int lower)
        cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))<<")*";
 
       // cout<<main_function<<power1<<numerator_two_int<<endl;
-       saved_answers+="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))+")*"+main_function+power1+convert_int_to_string(numerator_two_int);
+       saved_answers+="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))+")*x^"+convert_int_to_string(numerator_two_int);
        limit_answers_double=pow(upper,numerator_two_int)-pow(lower,numerator_two_int);
       limit_answers_double=(double)((limit_answers_double*numerator_constant_int)/numerator_two_int);
       cout<<"limit2: "<<limit_answers_double<<endl;
    }
    }
 
+
    all_answers.push_back(saved_answers);
+  //  cout<<"saved_answers: "<<saved_answers<<endl;
     all_answers_limit.push_back(limit_answers_double);
    saved_answers="";
    limit_answers_double=1.0000;
@@ -1333,14 +1334,8 @@ trigonmetry_diff_coefficient(string equation)
 string parse(string& given_expression,int upper,int lower)
 {
 
-
-   // cout<<"is_trigonmetry: "<< is_trigonmetry<<" pos: "<<pos<<endl;
-
-   // cout<<need_to_divide<<" "<<divide<<" "<<can_divide<<endl;
-//cout<<count_bracket<<endl;
-   //  cout<<first_bracket<<" "<<second_bracket<<endl;
-// cout<<"p.p"<<" "<<power_part<<endl;
-
+  given_expression=removeSubstring(given_expression,"+c");
+ //cout<<given_expression<<endl;
 
 ///working for  terms--->>
 ///----------------------------
@@ -1500,6 +1495,7 @@ string parse(string& given_expression,int upper,int lower)
     function_for(0,given_expression.size());
 
 
+
     for(auto i:loop)
     {
       //  cout<<i<<" ";
@@ -1636,7 +1632,6 @@ string parse(string& given_expression,int upper,int lower)
     {
         system=5;
     }
-
 
 
      cout<<"system: "<<system<<endl;
@@ -1856,6 +1851,7 @@ string parse(string& given_expression,int upper,int lower)
                {
                    first_bracket=i;
                }
+
 
            }
            ///sec(4*x)tan(4*x)
@@ -2096,6 +2092,11 @@ string parse(string& given_expression,int upper,int lower)
     }
     //if(count_term==all_answers.size()-1){
        int l=0;
+//cout<<"size: "<<all_answers.size()<<endl;
+for(int i=0;i<all_answers.size();i++)
+{
+    cout<<all_answers[i]<<endl;
+}
        for(int i=0;i<all_answers.size();i++)
        {
            if(i==all_answers.size()-1)
@@ -2107,8 +2108,9 @@ string parse(string& given_expression,int upper,int lower)
            {
                //cout<<all_answers[i]<<signs_are[l];
                main_output+="("+all_answers[i]+")"+signs_are[l];
+                l++;
            }
-           l++;
+
        }
      //  }
       double main_output_within_limit=0.000000000;
