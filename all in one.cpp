@@ -330,7 +330,7 @@ void power_and_constant(string power,string constant,int upper,int lower)
    }
    else
    {
-       cout<<"remain2"<<endl;
+      // cout<<"remain2"<<endl;
        cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))<<")*";
 
       // cout<<main_function<<power1<<numerator_two_int<<endl;
@@ -1072,7 +1072,7 @@ only_variable(string str,int upper,int lower)
 
 vector<int> computeLPS(const string& pattern)
 {
-    std::vector<int> lps(pattern.length(), 0);
+    vector<int> lps(pattern.length(), 0);
     int len = 0;
 
     for (size_t i = 1; i < pattern.length(); )
@@ -1098,12 +1098,12 @@ vector<int> computeLPS(const string& pattern)
 }
 
 
-vector<int> KMPSearch(const std::string& text, const std::string& pattern)
+vector<int> KMPSearch(const string& text, const string& pattern)
 {
-    std::vector<int> positions;
+    vector<int> positions;
     int n = text.length();
     int m = pattern.length();
-    std::vector<int> lps = computeLPS(pattern);
+    vector<int> lps = computeLPS(pattern);
 
     int i = 0;  // Index for text
     int j = 0;  // Index for pattern
@@ -1137,7 +1137,6 @@ vector<int> KMPSearch(const std::string& text, const std::string& pattern)
 
     return positions;
 }
-
 
 vector<int>find_substring(string text,string pattern)
 {
@@ -2172,6 +2171,18 @@ void replaceVariable(char *equation, const char *oldVar, const char *newVar) {
         pos = strstr(equation + newPos + newLen, oldVar);
     }
 }
+
+bool search1(string main,string input)
+{
+    if(main==input)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 motion_distance(string equation)
 {
     int upper=0,lower=0;
@@ -2255,6 +2266,54 @@ about_energy()
      printf("\n-->relation between energy and power \n\n");
 
 }
+
+string about_practice(string s)
+{
+    string s2,s1;
+    cout<<"    TRY TO SOLVE IT "<<endl;
+    cout<<"-----------------------"<<endl;
+    cout<<"Enter your answer: ";
+    cin>>s1;
+    cout<<endl;
+    return s1;
+}
+
+still_searching(string s2,string s1,string s)
+{
+    int ans;
+    string s3;
+     if(search1(s2,s1)==true)
+        {
+            cout<<"------------------------"<<endl;
+            cout<<"       YOU GOT IT....   "<<endl;
+            cout<<"------------------------"<<endl;
+        }
+        if(search1(s2,s1)==false)
+        {
+            cout<<"---------------------------------------------"<<endl;
+            cout<<"---------------------------------------------"<<endl;
+            cout<<"1.Want to try again?\n"<<"2.Show answer..\n";
+            cout<<"Enter : ";
+            cin>>ans;
+            if(ans==1)
+            {
+               s3=about_practice(s);
+               still_searching(s2,s3,s);
+
+            }
+            else
+            {
+              cout<<endl;
+              cout<<"---------------------------------------------"<<endl;
+              cout<<"The ans is: "<<s2<<endl;
+              cout<<endl;
+              cout<<"                 Practice More!!!...."<<endl;
+            }
+        }
+
+        cout<<endl;
+        cout<<endl;
+}
 int main()
 {
     string s;
@@ -2285,10 +2344,10 @@ int main()
       //parse(s,upper,lower);
       string s1=parse(s,upper,lower);
      // cout<<"s1: "<<s1<<endl;
-      parse(s1,lower,upper);
+     parse(s1,lower,upper);
     }
 
-    if(type==2){
+   else if(type==2){
      int type1=0;
 
     printf("what to want to do?\n");
@@ -2316,6 +2375,21 @@ int main()
      (ch=='v')? motion_velocity(equation):
      (ch=='a')? motion_acceleration(equation):motion_distance(equation);
 
+    }
+    else if(type==3)
+    {
+        string s,s2,s1,s3;
+        int ans,an=30;
+        cout<<"An equation given by teacher(an indefinite equation): "<<endl;
+        cin>>s;
+        s2=parse(s,0,0);
+        while(an!=0)
+        {
+            cout<<endl;
+            an--;
+        }
+        s1=about_practice(s);
+       still_searching(s2,s1,s);
     }
 
 }
