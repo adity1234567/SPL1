@@ -206,7 +206,7 @@ string constant_with_coefficient(string constant_list,int size_constant_list,str
 
 void power_and_constant(string power,string constant,int upper,int lower)
 {
-    cout<<"power: "<<power<<endl;
+    cout<<"power is: "<<power<<endl;
 
    set<char>power_check;
    int store=0;
@@ -260,7 +260,7 @@ void power_and_constant(string power,string constant,int upper,int lower)
 
      string main_function="x";
      string power1="^";
-   cout<<"i:"<<store1<<endl;
+   //cout<<"i:"<<store1<<endl;
 
        if(constant_check.find('/')!= constant_check.end())
        {
@@ -268,16 +268,16 @@ void power_and_constant(string power,string constant,int upper,int lower)
        {
          numerator_constant+=constant[i];
        }
-      cout<<numerator_constant<<endl;
+    //  cout<<numerator_constant<<endl;
       numerator_constant_int=convert_string_to_int(numerator_constant);
 
       for(int i=store1+1;i<constant.size();i++)
       {
           denominator_constant+=constant[i];
       }
-      cout<<"deno: "<<denominator_constant<<endl;
+      //cout<<"deno: "<<denominator_constant<<endl;
       denominator_constant_int=stoi(denominator_constant);
-      cout<<"int: "<<denominator_constant_int<<endl;
+      //out<<"int: "<<denominator_constant_int<<endl;
        }
    else
    {
@@ -289,8 +289,8 @@ void power_and_constant(string power,string constant,int upper,int lower)
    cout<<numerator_two_int<<" "<<denominator_two_int<<endl;
    cout<<numerator_constant_int<<" "<<denominator_constant_int<<endl;
 
-   cout<<power<<endl;
-   cout<<"here"<<endl;
+  // cout<<power<<endl;
+   //cout<<"here"<<endl;
    if(power=="")
     {
         numerator_two_int=2;
@@ -316,7 +316,7 @@ void power_and_constant(string power,string constant,int upper,int lower)
    {
    if(denominator_two_int*denominator_constant_int!=1)
    {
-       cout<<"remain"<<endl;
+       //cout<<"remain"<<endl;
        int new1=numerator_two_int*denominator_constant_int;
        cout<<"("<<simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(new1))<<")*x^";
        cout<<numerator_two_int<<endl;
@@ -592,7 +592,7 @@ void extra(string given_expression)
     }
 
     upor_extra_constant = reverse_string(reverse_upor_extra_constant);
-    cout << "nicher_constant: " << nicher_constant << endl;
+    //cout << "nicher_constant: " << nicher_constant << endl;
 
     for (int i = multi_pos[0] - 1; given_expression[i] != '('; i--)
     {
@@ -600,15 +600,15 @@ void extra(string given_expression)
     }
 
     upor_constant = reverse_string(reverse_upor_constant);
-    cout << "upor_constant: " << upor_constant << endl;
-    cout << "upor_extra_constant: " << upor_extra_constant << endl;
+   // cout << "upor_constant: " << upor_constant << endl;
+   // cout << "upor_extra_constant: " << upor_extra_constant << endl;
 
     string nicher_extra_constant = "",nicher_extra_constant_sign="";
     auto it = signs.begin();
 
     if (signs.size() == 1)
     {
-        cout << "*it and sign_pos: " << *it << " " << signs_pos[1] << endl;
+     //   cout << "*it and sign_pos: " << *it << " " << signs_pos[1] << endl;
         if (*it == '+')
         {
             nicher_extra_constant_sign += "-";
@@ -627,14 +627,14 @@ void extra(string given_expression)
         }
     }
 
-    cout << "nicher_extra_constant: " << nicher_extra_constant << endl;
+   // cout << "nicher_extra_constant: " << nicher_extra_constant << endl;
 
     int nicher_constant_int=0,upor_extra_constant_int=0,nicher_extra_constant_int,square_nicher_constant=0,new_extra_constant=0,upor_constant_int;
     int extra_constant_int=0,new_extra_constant1,new_extra_constant2;
     string extra_constant;
 
      nicher_constant_int=convert_string_to_int(nicher_constant);
-     cout<<"nicher_constant_int: "<<nicher_constant_int<<endl;
+    // cout<<"nicher_constant_int: "<<nicher_constant_int<<endl;
      upor_extra_constant_int=convert_string_to_int(upor_extra_constant);
      upor_constant_int=convert_string_to_int(upor_constant);
      nicher_extra_constant_int=convert_string_to_int(nicher_extra_constant);
@@ -642,7 +642,7 @@ void extra(string given_expression)
      new_extra_constant1=nicher_constant_int*upor_extra_constant_int;
      new_extra_constant2=nicher_extra_constant_int*upor_constant_int;
 
-     cout<<"new_extra_constant1 &constant2: "<<new_extra_constant1<<" "<<new_extra_constant2<<endl;
+   //  cout<<"new_extra_constant1 &constant2: "<<new_extra_constant1<<" "<<new_extra_constant2<<endl;
      if(signs.size()==1)
      {
          extra_constant_int=abs(new_extra_constant1-new_extra_constant2);
@@ -662,7 +662,7 @@ void extra(string given_expression)
      {
         extra_constant=abs(new_extra_constant1+new_extra_constant2);
      }
-     cout<<"extra_constant: "<<extra_constant<<endl;
+     cout<<"extra_constant is: "<<extra_constant<<endl;
       string expression = extractExpression(given_expression);
     string expression1=removeSubstring(given_expression,expression);
 
@@ -684,13 +684,8 @@ void extra(string given_expression)
 
 void trigonmetry_with_coefficient(string input,string change_function,string coefficient,string constant,int upper,int lower)
 {
-    //coefficient(input,change_function,coefficient);
-///within limit
-    ///-------------------------------------------------------------------------
+
     double upper_num=0.0000000,lower_num=0.000000000;
-
-
-    ///-------------------------------------------------------------------------
 
      string main_function="x";
 
@@ -758,7 +753,7 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant,
     int can_function=0;
     int pos_function=0;
 
-    cout<<input<<endl;
+    //cout<<input<<endl;
     bool a_power=false;
     for(int i=0;i<input.size();i++)
     {
@@ -785,10 +780,10 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant,
     }
 
     string function_is="";
-    for(auto i:check_function)
+    /*for(auto i:check_function)
     {
         cout<<i<<" ";
-    }
+    }*/
     cout<<endl;
     for(int i=0;i<check_function.size();i++)
     {
@@ -820,7 +815,7 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant,
 
     }
     //else if(check_function.size()==1)function_is="x";
-    cout<<function_is<<endl;
+   // cout<<function_is<<endl;
     string change_function="";
 
 
@@ -871,7 +866,7 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant,
          change_function+="ln(sec";
     }
 
-    cout<<"change function: "<<change_function<<endl;
+    cout<<function_is<<" changing the function: "<<change_function<<endl;
 
 
     check_function.clear();
@@ -907,7 +902,8 @@ double work_for_type_two(string input,int bound,string a_by_b)
     cout<<"ans is: "<<ans<<endl;
     return ans;
 }
-
+int count_multi=0,count_power=0,count_divide=0,x=0;
+bool trigonmetry=false,power=false,divide=false;
 void  formula_with_constant(string main_string,string change_function,string constant,int can_minus,int can_plus,string coefficient,bool is_coefficient,int upper,int lower)
 {
     int int_constant=convert_string_to_int(constant);
@@ -920,11 +916,11 @@ void  formula_with_constant(string main_string,string change_function,string con
     it_can_be(is_coefficient==true)
     {
         int int_coefficient=convert_string_to_int(coefficient);
-        cout<<"before main coefficient: "<<int_coefficient<<" "<<int_constant<<endl;
+        //cout<<"before main coefficient: "<<int_coefficient<<" "<<int_constant<<endl;
         a_by_b=simplification_numerator_denominator(constant,coefficient);
         b_by_a=simplification_numerator_denominator(coefficient,constant);
         int_coefficient=int_coefficient*int_constant;
-        cout<<"after: "<<int_coefficient<<endl;
+        //cout<<"after: "<<int_coefficient<<endl;
         string string_coefficient=convert_int_to_string(int_coefficient);
 
         constant_is=simplification_numerator_denominator("1",string_coefficient);
@@ -937,7 +933,7 @@ void  formula_with_constant(string main_string,string change_function,string con
     }
 
     cout<<"constant is: "<<constant_is<<endl;
-   cout<<"a_by_b: "<<a_by_b<<endl;
+    cout<<"a_by_b: "<<a_by_b<<endl;
     double upper_num=work_for_type_two(change_function,upper,a_by_b);
     double lower_num=work_for_type_two(change_function,lower,a_by_b);
     cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
@@ -1015,44 +1011,7 @@ void calcute_formulas(string formula,int pos_constant,int pos_of_x,bool is_plus,
     formula_with_constant(formula,change_function,constant,can_minus,can_plus,coefficient,is_coefficient,upper,lower);
 }
 
-int count_multi=0,count_power=0,count_divide=0,x=0;
-bool trigonmetry=false,power=false,divide=false;
-int terms_checking(const string& given_expression, int i=0) {
 
-
-    if (i < given_expression.size()) {
-        switch(given_expression[i])
-    {
-        case '*':
-           count_multi++;
-            break;
-        case '^':
-            count_power++;
-            power=true;
-            ///a^2+x^2 yes or not
-            break;
-        case '/':
-            divide=true;
-            count_divide++;
-            break;
-        case 'x':
-            x++;
-            break;
-        default:
-            if(given_expression[i]>='a'&&given_expression[i]<='z')
-            {
-                if(given_expression[i]!='x')
-                {
-                    trigonmetry=true;
-                }
-            }
-            break;
-    }
-}
-
-        terms_checking(given_expression, i+1);
-
-}
 
 only_variable(string str,int upper,int lower)
 {
@@ -1245,36 +1204,6 @@ the_series_of_x(int main_power,int constant,int i)
    the_series_of_x(main_power-1,constant,i+1);
 }
 
-/*uv_e_mx(string equation)
-{
-   // char str[] = "x^2*e^(4*x)";
-   string equation1=equation,equation2=equation;
-   int power=0,constant=0;
-   //for removing
-    const char delimiter[] = "*e";
-    char* match1 = strstr(equation1, delimiter);
-    if (match1 != NULL)
-    {
-        *match1 = '\0';
-    }
-
-    //for using e...
-    char* match2 = strstr(equation2, delimiter);
-    if (match2 != NULL)
-    {
-        char* substring = match2 + strlen(delimiter);
-
-    }
-
-   power=extract_power(equation1);
-   constant=extract_power(substring);
-   int i=1;
-    the_series_of_x(new_power,power,i);
-
-
-
-}
-*/
 
 trigonmetry_diff_coefficient(string equation)
 {
@@ -1334,7 +1263,7 @@ string parse(string& given_expression,int upper,int lower)
 {
 
   given_expression=removeSubstring(given_expression,"+c");
- //cout<<given_expression<<endl;
+  //cout<<"\n _expression<<endl;
 
 ///working for  terms--->>
 ///----------------------------
@@ -1392,7 +1321,8 @@ string parse(string& given_expression,int upper,int lower)
         check++;
     }
 
-    cout << "count_term: " << check << " " << count_term << endl;
+    cout<<"Total terms in the given expression are: "<<count_term<<endl;
+   // cout << "count_term: " << check << " " << count_term << endl;
 
 
 ///19/4/2023
@@ -1413,11 +1343,6 @@ string parse(string& given_expression,int upper,int lower)
      }
      //cout<<term1<<endl;
      terms_string.push_back(add_terms);
-
-     for(int i=0;i<count_term-1;i++)
-     {
-        cout<<terms_pos[i]<<endl;
-     }
     count_term--;
 
     int pos_checker=0;
@@ -1452,7 +1377,8 @@ string parse(string& given_expression,int upper,int lower)
   //  cout<<"terms_string.size()"<<terms_string.size()<<endl;
      for(int i=0;i<terms_string.size();i++)
     {
-        cout<<"before string is: "<<terms_string[i]<<endl;
+        cout<<"-------------------------------------------------"<<endl;
+        cout<<"Before modififying string is: "<<terms_string[i]<<endl;
     }
     cout<<endl;
     }
@@ -1489,7 +1415,7 @@ string parse(string& given_expression,int upper,int lower)
   //  bool exist_power=false;
    int pos=0;
 
-   x=0;
+     x=0;
     loop.clear();
     function_for(0,given_expression.size());
 
@@ -1564,7 +1490,7 @@ string parse(string& given_expression,int upper,int lower)
         return isdigit(static_cast<unsigned char>(c));
         });
 
-       cout << "Digits in the string: " << digits << endl;
+       //cout << "Digits in the string: " << digits << endl;
 
        pos_of_x.clear();
 
@@ -1597,7 +1523,7 @@ string parse(string& given_expression,int upper,int lower)
     coefficient1=coefficients[0];
     coefficient2=coefficients[1];
 
-   cout<<"coefficient1 and 2: "<<coefficient1<<" "<<coefficient2<<endl;
+   //cout<<"coefficient1 and 2: "<<coefficient1<<" "<<coefficient2<<endl;
     }
     if(coefficient1!=coefficient2)
     {
@@ -1607,9 +1533,6 @@ string parse(string& given_expression,int upper,int lower)
     {
        system=4;
     }
-    ///24/4/2023-->work on every terms count
-
-    //cout<<"x: "<<x<<endl;
     if(two_power==2)
     {
         system=3;
@@ -1633,7 +1556,7 @@ string parse(string& given_expression,int upper,int lower)
     }
 
 
-     cout<<"system: "<<system<<endl;
+     cout<<"The term's operating number: "<<system<<endl;
 
      int j,k=0;
           for(auto i:loop)
@@ -1660,20 +1583,6 @@ string parse(string& given_expression,int upper,int lower)
 
             loop.clear();
 
-       // cout<<"s.b: "<<j<<" "<<k<<endl;
-
-        /**
-          5*(x^5)
-
-          constant part x ar ageh pojhonto
-          so 1 to before x is constant
-
-          **/
-
-         // cout<<"constant part: "<<constant_part<<endl;
-
-   ///for every constant
-   ///----------------------------
 
 
     if(exist_constant==true)
@@ -2154,23 +2063,6 @@ for(int i=0;i<all_answers.size();i++)
        return main_output;
 }
 
-void replaceVariable(char *equation, const char *oldVar, const char *newVar) {
-    char *pos = strstr(equation, oldVar);
-    size_t oldLen = strlen(oldVar);
-    size_t newLen = strlen(newVar);
-    size_t equationLen = strlen(equation);
-    size_t offset = 0;
-
-    while (pos != NULL) {
-        size_t newPos = pos - equation + offset;
-
-        memmove(equation + newPos + newLen, equation + newPos + oldLen, equationLen - newPos - oldLen + 1);
-        memcpy(equation + newPos, newVar, newLen);
-
-        offset += newLen - oldLen;
-        pos = strstr(equation + newPos + newLen, oldVar);
-    }
-}
 
 bool search1(string main,string input)
 {
