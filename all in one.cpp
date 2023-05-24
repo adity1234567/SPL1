@@ -5,7 +5,7 @@ vector<int>loop;
 string saved_answers="";
 vector<string>all_answers;
 double limit_answers_double=1.00000;
-vector<int>all_answers_limit;
+vector<double>all_answers_limit;
 
 void function_for(int i,int n)
 {
@@ -681,9 +681,15 @@ void extra(string given_expression)
 
 
 
-void trigonmetry_with_coefficient(string input,string change_function,string coefficient,string constant)
+void trigonmetry_with_coefficient(string input,string change_function,string coefficient,string constant,int upper,int lower)
 {
     //coefficient(input,change_function,coefficient);
+///within limit
+    ///-------------------------------------------------------------------------
+    double upper_num=0.0000000,lower_num=0.000000000;
+
+
+    ///-------------------------------------------------------------------------
 
      string main_function="x";
 
@@ -693,32 +699,55 @@ void trigonmetry_with_coefficient(string input,string change_function,string coe
         {
           //cout<<"1st"<<endl;
           simplification_numerator_denominator(constant,coefficient);
-          cout<<"("<<constant<<"/"<<coefficient<<")"<<change_function+"("+coefficient+main_function+")"<<endl;
-          saved_answers+="("+constant+"/"+coefficient+")"+change_function+"("+coefficient+main_function+")";
+          cout<<"("<<constant<<"/"<<coefficient<<")*"<<change_function+"("+coefficient+"*"+main_function+")"<<endl;
+          saved_answers+="("+constant+"/"+coefficient+")*"+change_function+"("+coefficient+"*"+main_function+")";
+
+           upper_num=work_for_trigonmetry(change_function,upper*convert_string_to_int(coefficient));
+           lower_num=work_for_trigonmetry(change_function,lower*convert_string_to_int(coefficient));
+           cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
+           limit_answers_double*=(double)(convert_string_to_int(constant)/convert_string_to_int(coefficient));
+           limit_answers_double*=(upper_num-lower_num);
 
         }
         else
         {
-           cout<<constant<<change_function+"("+coefficient+main_function+")"<<endl;
-            saved_answers+=constant+change_function+"("+coefficient+main_function+")";
+           cout<<constant<<change_function+"("+coefficient+"*"+main_function+")"<<endl;
+            saved_answers+=constant+change_function+"("+coefficient+"*"+main_function+")";
+             upper_num=work_for_trigonmetry(change_function,upper);
+           lower_num=work_for_trigonmetry(change_function,lower);
+           cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
+           limit_answers_double*=convert_string_to_int(constant);
+           limit_answers_double*=(upper_num-lower_num);
         }
     }
     else
     {
         if(coefficient=="")
         {
-            cout<<"2nd 1"<<endl;
+            //cout<<"2nd 1"<<endl;
             cout<<change_function+main_function<<endl;
+             upper_num=work_for_trigonmetry(change_function,upper);
+           lower_num=work_for_trigonmetry(change_function,lower);
+           cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
+           limit_answers_double*=(upper_num-lower_num);
         }
         else
         {
             simplification_numerator_denominator(constant,coefficient);
-            cout<<"("<<constant<<"/"<<coefficient<<")"<<change_function+"("+coefficient+main_function+")"<<endl;
-            saved_answers+="("+constant+"/"+coefficient+")"+change_function+"("+coefficient+main_function+")";
+            cout<<"("<<constant<<"/"<<coefficient<<")*"<<change_function+"("+coefficient+"*"+main_function+")"<<endl;
+            saved_answers+="("+constant+"/"+coefficient+")*"+change_function+"("+coefficient+"*"+main_function+")";
+            upper_num=work_for_trigonmetry(change_function,upper*convert_string_to_int(coefficient));
+           lower_num=work_for_trigonmetry(change_function,lower*convert_string_to_int(coefficient));
+           cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
+           limit_answers_double*=(double)(convert_string_to_int(constant)/convert_string_to_int(coefficient));
+           limit_answers_double*=(upper_num-lower_num);
+
         }
     }
     all_answers.push_back(saved_answers);
+    all_answers_limit.push_back(limit_answers_double);
     saved_answers="";
+    limit_answers_double=1.0000000;
 }
 
 
@@ -843,19 +872,9 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant,
 
     cout<<"change function: "<<change_function<<endl;
 
-    ///within limit
-    ///-------------------------------------------------------------------------
-    double upper_num=0.0000000,lower_num=0.000000000;
-           cout<<"trigon"<<endl;
-            double modified_upper=upper;
-            double modified_lower=lower;
-            upper_num=work_for_trigonmetry(change_function,modified_upper);
-           lower_num=work_for_trigonmetry(change_function,modified_lower);
-           cout<<"upper and lower num: "<<upper_num<<" "<<lower_num<<endl;
-    ///-------------------------------------------------------------------------
 
     check_function.clear();
-    trigonmetry_with_coefficient(input,change_function,coefficient,constant);
+    trigonmetry_with_coefficient(input,change_function,coefficient,constant,upper,lower);
 }
 
 double work_for_type_two(string input,int bound,string a_by_b)
@@ -1472,6 +1491,7 @@ string parse(string& given_expression,int upper,int lower)
     string numerator,denominator,main_term="x";
     vector<int>secondBrackets,firstBrackets;
     vector<int> pos_of_x;
+    bool no_coefficient=false;
   //  bool exist_power=false;
    int pos=0;
 
@@ -1536,6 +1556,10 @@ string parse(string& given_expression,int upper,int lower)
             pos_of_x.push_back(i);
             only_x=true;
         }
+         if(given_expression[i]=='('&&given_expression[i+1]=='x')
+        {
+                   no_coefficient=true;
+        }
     }
 
         int system=0;
@@ -1548,6 +1572,7 @@ string parse(string& given_expression,int upper,int lower)
        cout << "Digits in the string: " << digits << endl;
 
        pos_of_x.clear();
+
     for(int i=0;i<given_expression.size();i++)
     {
         int digits_size=given_expression.size()-2;
@@ -1567,7 +1592,7 @@ string parse(string& given_expression,int upper,int lower)
     int coefficient1=0,coefficient2=0,main_coefficient=0,plus_coefficient_int=0,minus_coefficient_int=0;
     string sign="/",output1="",output2="",main="x";
 
-    if(is_trigonmetry==true){
+    if(is_trigonmetry==true&&can_divide==0){
     vector<int>pos1=find_substring(given_expression,"sin");
     vector<int>pos2=find_substring(given_expression,"cos");
 
@@ -1577,7 +1602,7 @@ string parse(string& given_expression,int upper,int lower)
     coefficient1=coefficients[0];
     coefficient2=coefficients[1];
 
-   // cout<<"coefficient1 and 2: "<<coefficient1<<" "<<coefficient2<<endl;
+   cout<<"coefficient1 and 2: "<<coefficient1<<" "<<coefficient2<<endl;
     }
     if(coefficient1!=coefficient2)
     {
@@ -1831,12 +1856,14 @@ string parse(string& given_expression,int upper,int lower)
                {
                    first_bracket=i;
                }
+
            }
            ///sec(4*x)tan(4*x)
            loop.clear();
-      cout<<"position of coefficient and first bracket: "<<position_coefficient<<" "<<first_bracket<<endl;
+//      cout<<"position of coefficient and first bracket: "<<position_coefficient<<" "<<first_bracket<<endl;
 
         int main_str_size=0;
+        if(no_coefficient==false){
         if(waiting_x.size()==2){
          int main_str_size=0;
          for(int i=0;i<waiting_x.size()/2;i++){
@@ -1855,6 +1882,7 @@ string parse(string& given_expression,int upper,int lower)
         {
             //(x)+(35*sin(4*x))
 
+
             for(int i=0;i<waiting_x.size();i++){
 
                int k=waiting_x[i]-2;
@@ -1867,6 +1895,11 @@ string parse(string& given_expression,int upper,int lower)
                }
                i++;
         }
+        }
+        }
+        else
+        {
+            coefficient="";
         }
     cout<<"co-efficient: "<< coefficient<<endl;
 
@@ -1948,7 +1981,7 @@ string parse(string& given_expression,int upper,int lower)
                if(given_expression[i]=='-')
                {
                    is_minus=true;
-                    cout<<"pagol minus ase"<<endl;
+                  //  cout<<"pagol minus ase"<<endl;
                    minus_pos=i;
                }
                 if(given_expression[i]=='+')
@@ -2146,15 +2179,25 @@ motion_distance(string equation)
 motion_velocity(string equation)
 {
     int upper=0,lower=0;
-    cout<<"velocity to distance: ";
-    parse(equation,upper,lower);
+    string s1=parse(equation,upper,lower);
+    cout<<endl;
+    cout<<"----------------------------------------------------------------------"<<endl;
+    cout<<"|       [ This is the output expression of velocity to distance ]"<<endl;
+    cout<<"|                                                                  "<<endl;
+    cout<<"|                   "<<s1<<"                                       "<<endl;
+    cout<<"----------------------------------------------------------------------"<<endl;
 }
 
 motion_acceleration(string equation)
 {
     int upper=0,lower=0;
-    cout<<"velocity to distance: ";
-    motion_velocity(equation);
+    string s=parse(equation,upper,lower),s1;
+    cout<<"----------------------------------------------------------------------"<<endl;
+    cout<<"|       [ This is the output expression of velocity to distance ]"<<endl;
+    cout<<s<<endl;
+    cout<<"----------------------------------------------------------------------"<<endl;
+
+    cout<<motion_velocity(s);
 
 
 }
@@ -2242,17 +2285,7 @@ int main()
      // cout<<"s1: "<<s1<<endl;
       parse(s1,lower,upper);
     }
-    /*
-    string s;
-    printf("Enter the equation: ");
-    cin>>s;
-    int upper,lower;
-    printf("input upper and lower limit: ");
-    cin>>upper>>lower;
-    parse(s,upper,lower);
-    string s1=parse(s,upper,lower);
-    limit(s1,lower,upper);
-    */
+
     if(type==2){
      int type1=0;
 
@@ -2262,16 +2295,19 @@ int main()
     printf("\n-->motion\n-->force\n-->work\n-->energy\n\n\n");
 
     printf("enter your type(in number): ");
-    scanf("%d",&type);
+    scanf("%d",&type1);
     char ch;
 
-    if(type1==1)  ch=about_motion();
+    if(type1==1)
+    {
+        ch=about_motion();
+    }
     if(type1==2)
     {
         about_work(); ch='w';
     }
     if(type1==3) about_energy();
-    cout<<"equation is: "<<ch<<"() =";
+    cout<<"equation is: "<<ch<<"(x) =";
 
     cin>>equation;
 
