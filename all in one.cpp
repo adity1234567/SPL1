@@ -2165,7 +2165,7 @@ work_force(string equation)
     parse(equation,upper,lower);
 }
 
-about_work()
+about_work(string equation)
 {
      printf("\n\n");
      printf("work --> done by force\n");
@@ -2173,6 +2173,7 @@ about_work()
      char input;
      cout<<dashes;
      printf("\n-->relation among work,force and distance\n\n");
+     parse(equation,0,0);
 
 }
 
@@ -2306,17 +2307,25 @@ int main()
     {
         ch=about_motion();
     }
-    if(type1==2)
+    if(type==2)
     {
-        about_work(); ch='w';
+        cout<<"F=m*a(suppose m is constant"<<endl;
+        cout<<"-------------------------------"<<endl;
+        ch='f';
     }
-    if(type1==3) about_energy();
+    if(type1==3)
+    {
+        ch='w';
+    }
+    if(type1==4) about_energy();
     cout<<"equation is: "<<ch<<"(x) =";
 
     cin>>equation;
 
      (ch=='v')? motion_velocity(equation):
-     (ch=='a')? motion_acceleration(equation):motion_distance(equation);
+     (ch=='a')? motion_acceleration(equation):
+     (ch=='d')? motion_distance(equation):
+     (ch=='w')? about_work(equation):about_force(equation);
 
     }
     else if(type==4)
