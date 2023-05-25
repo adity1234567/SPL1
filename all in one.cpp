@@ -2163,6 +2163,7 @@ work_force(string equation)
     int lower=0,upper=0;
     cout<<"W = F*x"<<endl;
     string s1=parse(equation,upper,lower);
+    cout<<endl;
     cout<<"work is: "<<s1<<endl;
 }
 
