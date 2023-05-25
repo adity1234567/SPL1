@@ -2162,7 +2162,8 @@ work_force(string equation)
 {
     int lower=0,upper=0;
     cout<<"W = F*x"<<endl;
-    parse(equation,upper,lower);
+    string s1=parse(equation,upper,lower);
+    cout<<"work is: "<<s1<<endl;
 }
 
 about_work(string equation)
@@ -2188,6 +2189,7 @@ about_energy()
 
 }
 
+
 string about_practice(string s)
 {
     string s2,s1;
@@ -2198,6 +2200,8 @@ string about_practice(string s)
     cout<<endl;
     return s1;
 }
+
+
 
 still_searching(string s2,string s1,string s)
 {
@@ -2325,7 +2329,7 @@ int main()
      (ch=='v')? motion_velocity(equation):
      (ch=='a')? motion_acceleration(equation):
      (ch=='d')? motion_distance(equation):
-     (ch=='w')? about_work(equation):about_force(equation);
+     (ch=='w')? about_work(equation):work_force(equation);
 
     }
     else if(type==4)
