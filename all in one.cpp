@@ -5,7 +5,7 @@ vector<int>loop;
 string saved_answers="";
 vector<string>all_answers;
 double limit_answers_double=1.00000;
-vector<int>all_answers_limit;
+vector<double>all_answers_limit,within_limit;
 
 void function_for(int i,int n)
 {
@@ -286,8 +286,8 @@ void power_and_constant(string power,string constant,int upper,int lower)
    }
 
 
-   cout<<numerator_two_int<<" "<<denominator_two_int<<endl;
-   cout<<numerator_constant_int<<" "<<denominator_constant_int<<endl;
+//   cout<<numerator_two_int<<" "<<denominator_two_int<<endl;
+  // cout<<numerator_constant_int<<" "<<denominator_constant_int<<endl;
 
   // cout<<power<<endl;
    //cout<<"here"<<endl;
@@ -337,7 +337,7 @@ void power_and_constant(string power,string constant,int upper,int lower)
        saved_answers+="("+simplification_numerator_denominator(convert_int_to_string(numerator_constant_int),convert_int_to_string(numerator_two_int))+")*x^"+convert_int_to_string(numerator_two_int);
        limit_answers_double=pow(upper,numerator_two_int)-pow(lower,numerator_two_int);
       limit_answers_double=(double)((limit_answers_double*numerator_constant_int)/numerator_two_int);
-      cout<<"limit2: "<<limit_answers_double<<endl;
+      //cout<<"limit2: "<<limit_answers_double<<endl;
    }
    }
 
@@ -445,7 +445,7 @@ void calculate_power_part(string& s,string constant,bool can_divide,int upper,in
     //bool can_divide=false;
     set<char>for_power_one;
     string power_one="";
-    cout<<s1.size()<<endl;
+    //cout<<s1.size()<<endl;
     int bracket[100];
     int j=0;
     for(int i=0;i<s1.size();i++)
@@ -821,11 +821,11 @@ void calculate_trigonmetry_part(string input,string coefficient,string constant,
 
     if(function_is=="sinx")
     {
-        change_function+="cos";
+        change_function+="(-1)*cos";
     }
     else if(function_is=="cosx")
     {
-        change_function+="(-1)*sin";
+        change_function+="sin";
     }
     else if(function_is=="secx")
     {
@@ -1205,7 +1205,7 @@ the_series_of_x(int main_power,int constant,int i)
 }
 
 
-trigonmetry_diff_coefficient(string equation)
+trigonmetry_diff_coefficient(string equation,int upper,int lower)
 {
     ///sin(5*x)cos(4*x)
 
@@ -1221,44 +1221,59 @@ trigonmetry_diff_coefficient(string equation)
     minus_coefficient_int=abs(coefficient1-coefficient2);
 
     int constant_int=extract_constant(equation);
-    string constant,plus_coefficient,minus_coefficient;
+    string constant,plus_coefficient="",minus_coefficient="";
     constant=convert_int_to_string(constant_int);
-    plus_coefficient=convert_int_to_string(plus_coefficient_int);
-    minus_coefficient=convert_int_to_string(minus_coefficient_int);
+     plus_coefficient=convert_int_to_string(plus_coefficient_int);
+     minus_coefficient=convert_int_to_string(minus_coefficient_int);
 
+    cout<<"plus_minus: "<<plus_coefficient<<" "<<minus_coefficient<<endl;
     if(!pos1.empty()||!pos2.empty())
     {
         if(pos1.size()==1&&pos2.size()==1)
         {
            output1+="("+constant;
-           output1+=sign + "2)(sin(";
-           output1+=plus_coefficient+output1+="*"+main+"+(sin(";
-           output1+=minus_coefficient+"*"+main+")";
+           output1+=sign + "2)(((-1)*cos(";
+           //output1+=plus_coefficient+output1+="*"+main+"+(sin(";
+           //output1+=minus_coefficient+"*"+main+")";
 
-           cout<<output1<<endl;
+          // cout<<output1<<endl;
            ///trigonmetry sin to cos kora lagbe.....
 
-           output2+="("+constant+sign + "2)(-cos("+plus_coefficient;
+           output2+="("+output1+plus_coefficient+"*x)/"+plus_coefficient+")"+"-(cos("+minus_coefficient+"*x)/"+minus_coefficient+"))";
+           //cout<<output2<<endl;
+           saved_answers+=output2;
         }
 
-    }
-    else
-    {
-        if(pos1.size()==2&&pos2.empty())
+
+    else if(pos1.size()==2&&pos2.empty())
         {
-           ///trigonmetry sin to cos kora lagbe.....
+           ///trigonmetry sin to cos kora lagbe.....sin(Ax)sin(bx)
 
-           output2+="("+constant+sign + "2)(-cos("+plus_coefficient;
+            output1+="("+constant;
+             output1+=sign + "2)((sin(";
+            output2+="("+output1+minus_coefficient+"*x)/"+minus_coefficient+")"+"-(sin("+plus_coefficient+"*x)/"+plus_coefficient+"))";
+
+           saved_answers+=output2;
         }
-        else if(pos2.size()==2&&pos1.empty())
+    else if(pos2.size()==2&&pos1.empty())
         {
             ///trigonmetry sin to cos kora lagbe.....
 
-           output2+="("+constant+sign + "2)(-cos("+plus_coefficient;
+             output1+="("+constant;
+             output1+=sign + "2)((sin(";
+            output2+="("+output1+minus_coefficient+"*x)/"+minus_coefficient+")"+"+(sin("+plus_coefficient+"*x)/"+plus_coefficient+"))";
+
+           saved_answers+=output2;
+
+
+           //cout<<output2<<endl;
         }
     }
+    all_answers.push_back(saved_answers);
+    string saved_answers="";
 
 }
+
 string parse(string& given_expression,int upper,int lower)
 {
 
@@ -1267,6 +1282,8 @@ string parse(string& given_expression,int upper,int lower)
 
 ///working for  terms--->>
 ///----------------------------
+    int task=1;
+    task++;
     int check = 0;
     int count_term=1;
     int count_sign=0;
@@ -1860,7 +1877,7 @@ string parse(string& given_expression,int upper,int lower)
 
        if(system==6)
        {
-           trigonmetry_diff_coefficient(given_expression);
+           trigonmetry_diff_coefficient(given_expression,upper,lower);
        }
        if(system==3)
        {
@@ -2038,11 +2055,22 @@ for(int i=0;i<all_answers.size();i++)
            }
        }
 
+
        cout<<"main_output_within_limit: "<<endl;
        string dashes(30, '-');
        cout<<dashes;
        cout<<endl;
-       cout<<main_output_within_limit<<endl;
+       cout<<(double)main_output_within_limit<<endl;
+       within_limit.push_back(main_output_within_limit);
+
+
+            cout<<"within limit:"<<endl;
+            cout<<"--------------"<<endl;
+       for(int i=0;i<within_limit.size();i++)
+       {
+           cout<<within_limit[i]<<endl;
+       }
+
        cout<<endl;
        cout<<"The output is: "<<endl;
        string dashes1(15, '-');
@@ -2183,6 +2211,7 @@ still_searching(string s2,string s1,string s)
         if(search1(s2,s1)==false)
         {
             cout<<"---------------------------------------------"<<endl;
+            cout<<"         WRONG ANSWER"<<endl;
             cout<<"---------------------------------------------"<<endl;
             cout<<"1.Want to try again?\n"<<"2.Show answer..\n";
             cout<<"Enter : ";
@@ -2212,6 +2241,7 @@ int main()
     int upper,lower;
     cout<<endl;
     cout<<endl;
+
     string spaces(42, ' '),equation;
     cout<<spaces;
     cout<<"INTEGRATION ANALYZER"<<endl;
@@ -2225,7 +2255,7 @@ int main()
     int type;
     cout<<dashes1;
     printf("\n");
-    printf("Type 01: Ingeral problems\nType 02: Physics problems\nType 03: Practice\n\nEnter type: ");
+    printf("Type 01: Ingeral problems\nType 02: Area between two equation\nType-03: Physics problems\nType 04: Practice\n\nEnter type: ");
     cin>>type;
     if(type==1)
     {
@@ -2236,10 +2266,31 @@ int main()
       //parse(s,upper,lower);
       string s1=parse(s,upper,lower);
      // cout<<"s1: "<<s1<<endl;
-     parse(s1,lower,upper);
+    // parse(s1,lower,upper);
     }
 
-   else if(type==2){
+    else if(type==2)
+    {
+        string s4,s5,s6,s7,s8;
+        double area1=0.00000,area2=0.0000;
+        printf("Enter the first equation: ");
+        cin>>s4;
+        printf("Enter the second equation: ");
+        cin>>s5;
+        printf("input upper and lower limit: ");
+        cin>>upper>>lower;
+        s6=parse(s4,upper,lower);
+        s7=parse(s5,upper,lower);
+        area1=within_limit[0];
+        area2=within_limit[1];
+        printf("\n\n");
+        cout<<"-------------------------------------------------------------"<<endl;
+        cout<<"The function of area is: ("<<s6<<")-("<<s7<<")"<<endl;
+        cout<<"The area: "<<abs(area1-area2)<<endl;
+        cout<<"-------------------------------------------------------------"<<endl;
+
+    }
+   else if(type==3){
      int type1=0;
 
     printf("what to want to do?\n");
@@ -2268,7 +2319,7 @@ int main()
      (ch=='a')? motion_acceleration(equation):motion_distance(equation);
 
     }
-    else if(type==3)
+    else if(type==4)
     {
         string s,s2,s1,s3;
         int ans,an=30;
